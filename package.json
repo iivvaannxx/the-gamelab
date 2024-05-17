@@ -1,0 +1,20 @@
+{
+  "name": "flappy-bird",
+  "author": "Ivan Porto Wigner",
+  "description": "",
+  
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "lefthook install"
+  },
+
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/types": "^19.0.3",
+    "lefthook": "^1.6.12"
+  }
+}

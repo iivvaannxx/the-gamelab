@@ -1,0 +1,10 @@
+pre-commit:
+  commands:
+    check:
+      glob: "*.{js,ts,.d.ts,json}"
+      run: bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true $@
+
+commit-msg:
+  commands:
+    lint-commit:
+      run: bunx commitlint --edit ${LEFTHOOK_GIT_PARAMS}

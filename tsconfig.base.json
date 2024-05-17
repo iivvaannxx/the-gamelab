@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+
+    "stripInternal": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true
+  }
+}
