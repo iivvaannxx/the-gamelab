@@ -8,19 +8,19 @@ const app = new Application();
 
 /** Initializes the application and starts loading the used assets. */
 async function init() {
+  const container = document.getElementById("app")!;
   await app.init({
     backgroundAlpha: 0,
-    resizeTo: window,
+    resizeTo: container,
     antialias: true,
   });
 
-  const container = document.getElementById("app");
   container?.appendChild(app.canvas);
 
   await Assets.init({ manifest });
   Assets.backgroundLoadBundle("game");
 
-  Resources.init();
+  await Resources.init();
 }
 
 /** Entrypoint for the game. The game is started here. */
