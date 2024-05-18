@@ -8,9 +8,9 @@ export const manifest: AssetsManifest = {
       assets: [
         {
           alias: "spritesheet",
-          src: "/assets/spritesheet.webp"
-        }
-      ]
-    }
-  ]
+          src: "/assets/spritesheet.webp",
+        },
+      ],
+    },
+  ],
 };

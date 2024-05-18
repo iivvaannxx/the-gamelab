@@ -1,0 +1,34 @@
+@import "./reset.css";
+
+:root {
+
+  --background-start: #6bcde5;
+  --background-end: #d6feff;
+}
+
+html,
+body {
+
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  background: linear-gradient(to bottom, var(--background-start), var(--background-end));
+
+  animation: fade-in 1s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
