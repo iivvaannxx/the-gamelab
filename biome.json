@@ -8,7 +8,7 @@
     "formatWithErrors": false,
     "indentStyle": "space",
     "lineEnding": "lf",
-    "lineWidth": 90
+    "lineWidth": 80
   },
   "javascript": {
     "formatter": {
