@@ -14,6 +14,7 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "pixi.js": "^8.1.4"
+    "pixi.js": "^8.1.4",
+    "vite-tsconfig-paths": "^4.3.2"
   }
 }
