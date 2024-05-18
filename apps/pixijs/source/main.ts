@@ -8,7 +8,12 @@ const app = new Application();
 
 /** Initializes the application and starts loading the used assets. */
 async function init() {
-  const container = document.getElementById("app")!;
+  const container = document.getElementById("app");
+
+  if (!container) {
+    throw new Error("The container element was not found.");
+  }
+
   await app.init({
     backgroundAlpha: 0,
     resizeTo: container,
