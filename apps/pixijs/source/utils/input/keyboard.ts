@@ -7,7 +7,7 @@ import type { CamelCase } from "type-fest";
  *
  * @see https://www.toptal.com/developers/keycode To find the `event.code` of a key.
  */
-const KEYBOARD_KEYS = ["Space", "Escape", "ControlLeft"] as const;
+const KEYBOARD_KEYS = ["Space", "Escape"] as const;
 
 /** A union of all the keys in the keyboard we want to listen */
 type KeyboardKey = (typeof KEYBOARD_KEYS)[number];
@@ -168,5 +168,8 @@ class KeyboardInternal {
   }
 }
 
-// We want to expose the state of the keyboard, so we merge the internal API with the state.
-export const Keyboard = Object.assign(KeyboardInternal, KEYBOARD_STATE);
+/** Utility to track the state of keyboard events. */
+export const Keyboard = Object.freeze(
+  // We want to expose the state of the keyboard, so we merge the internal API with the state.
+  Object.assign(KeyboardInternal, KEYBOARD_STATE),
+);

@@ -44,12 +44,5 @@ init().then(async (app) => {
 
     // And finally update the scene.
     gameScene.update();
-
-    if (
-      Keyboard.controlLeftKey.isPressed &&
-      Keyboard.spaceKey.wasPressedThisFrame
-    ) {
-      console.log("Ctrl+Space key was pressed!");
-    }
   });
 });
