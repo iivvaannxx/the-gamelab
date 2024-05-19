@@ -17,6 +17,7 @@ async function init() {
   await app.init({
     resizeTo: container,
     antialias: true,
+    eventMode: "none",
 
     // We use a transparent background. The gradient is set from CSS.
     backgroundAlpha: 0,
@@ -44,8 +45,11 @@ init().then(async (app) => {
     // And finally update the scene.
     gameScene.update();
 
-    if (Keyboard.escapeKey.wasPressedThisFrame) {
-      console.log("Escape key was pressed!");
+    if (
+      Keyboard.controlLeftKey.isPressed &&
+      Keyboard.spaceKey.wasPressedThisFrame
+    ) {
+      console.log("Ctrl+Space key was pressed!");
     }
   });
 });

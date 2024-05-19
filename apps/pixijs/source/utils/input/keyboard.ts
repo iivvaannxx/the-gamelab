@@ -1,16 +1,19 @@
+import camelCase from "just-camel-case";
+import type { CamelCase } from "type-fest";
+
 /**
  * All the keyboard keys we want to listen to.
  * Extend this array with the keys you want to listen to.
  *
  * @see https://www.toptal.com/developers/keycode To find the `event.code` of a key.
  */
-const KEYBOARD_KEYS = ["Space", "Escape"] as const;
+const KEYBOARD_KEYS = ["Space", "Escape", "ControlLeft"] as const;
 
 /** A union of all the keys in the keyboard we want to listen */
 type KeyboardKey = (typeof KEYBOARD_KEYS)[number];
 
 /** The accessor for each key in the state. */
-type KeyboardKeyAccessor = `${Lowercase<KeyboardKey>}Key`;
+type KeyboardKeyAccessor = `${CamelCase<KeyboardKey>}Key`;
 
 /** The API exposed for every key we want to listen. */
 type KeyControl = {
@@ -47,7 +50,7 @@ function isKeyboardKey(key: string): key is KeyboardKey {
  * @returns The key accessor name.
  */
 function getKeyAccessor(key: KeyboardKey) {
-  return `${key.toLowerCase()}Key` as KeyboardKeyAccessor;
+  return `${camelCase(key)}Key` as KeyboardKeyAccessor;
 }
 
 /**
