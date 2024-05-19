@@ -18,8 +18,10 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["./source/*"],
-    }
+    },
+
+    "types": ["source/vite-env.d.ts"]
   },
 
-  "include": ["source"]
+  "include": ["source"],
 }

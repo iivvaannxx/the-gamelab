@@ -1,38 +1,51 @@
-import { Application, Assets } from "pixi.js";
-import "./styles/main.css";
+import { Application } from "pixi.js";
 
-import { manifest } from "./assets/manifest";
-import { Resources } from "./assets/resources";
+import "@app/styles/main.css";
+import { Resources } from "@app/assets/resources";
+import { Keyboard } from "@app/utils/input/keyboard";
+import { Time } from "@app/utils/time";
 
-const app = new Application();
-
-/** Initializes the application and starts loading the used assets. */
+/**
+ * Initializes the Flappy Bird game.
+ * @returns The instance of the application.
+ */
 async function init() {
-  const container = document.getElementById("app");
+  const app = new Application();
+  const container = document.querySelector("#app") as HTMLDivElement;
 
-  if (!container) {
-    throw new Error("The container element was not found.");
-  }
-
+  // Initialize the Pixi.js application.
   await app.init({
-    backgroundAlpha: 0,
     resizeTo: container,
     antialias: true,
+
+    // We use a transparent background. The gradient is set from CSS.
+    backgroundAlpha: 0,
   });
 
-  container?.appendChild(app.canvas);
+  container.appendChild(app.canvas);
 
-  await Assets.init({ manifest });
-  Assets.backgroundLoadBundle("game");
-
+  // Initialize all the game modules.
   await Resources.init();
+  Keyboard.init();
+
+  return app;
 }
 
-/** Entrypoint for the game. The game is started here. */
-async function start() {
+// Entrypoint of the game.
+init().then(async (app) => {
   const { gameScene } = await import("./scenes/game");
   gameScene.init(app);
-}
 
-// Start entrypoint.
-init().then(start);
+  app.ticker.add((ticker) => {
+    // Update the necessary game modules (order is important).
+    Time.update(ticker);
+    Keyboard.update();
+
+    // And finally update the scene.
+    gameScene.update();
+
+    if (Keyboard.escapeKey.wasPressedThisFrame) {
+      console.log("Escape key was pressed!");
+    }
+  });
+});

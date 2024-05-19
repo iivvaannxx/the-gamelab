@@ -17,6 +17,10 @@ class GameScene {
     this.app = app;
     this.bird = new Bird(app);
   }
+
+  update() {
+    this.bird.update();
+  }
 }
 
 /** The unique instance of our game scene. */

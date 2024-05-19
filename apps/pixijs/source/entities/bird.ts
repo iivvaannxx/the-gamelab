@@ -18,7 +18,11 @@ export class Bird {
     this.sprite = this.setupSprite();
 
     app.stage.addChild(this.sprite);
-    app.ticker.add(this.update.bind(this));
+  }
+
+  /** Updates the bird entity. Runs on every frame update. */
+  public update() {
+    this.ensureResponsive();
   }
 
   /**
@@ -46,10 +50,5 @@ export class Bird {
     this.sprite.x = width / 2;
     this.sprite.y = height / 2;
     this.sprite.scale = 0.4;
-  }
-
-  /** Updates the bird entity. Runs on every frame update. */
-  private update() {
-    this.ensureResponsive();
   }
 }
