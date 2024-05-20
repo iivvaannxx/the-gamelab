@@ -1,0 +1,31 @@
+{
+  "name": "@gamelab/input-system",
+  "author": "Ivan Porto Wigner",
+  "description": "A collection of utilities to handle input events. Inspired by the Unity3D Input System.",
+
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./keyboard": {
+      "default": "./dist/keyboard.js",
+      "types": "./dist/keyboard.d.ts"
+    }
+  },
+
+  "scripts": {
+    "build": "rimraf ./dist && tsup"
+  },
+
+  "devDependencies": {
+    "rimraf": "^5.0.7",
+    "tsup": "^8.0.2",
+    "typescript": "^5.2.2"
+  }
+}
