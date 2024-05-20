@@ -3,7 +3,7 @@ import { Application } from "pixi.js";
 import "@app/styles/main.css";
 import { Resources } from "@app/assets/resources";
 
-import { Keyboard } from "@gamelab/input-system";
+import * as Keyboard from "@gamelab/input-system/keyboard";
 import { FIXED_UPDATE_RATE, MAX_DELTA_TIME, MAX_FPS } from "./constants";
 
 /**
@@ -53,10 +53,6 @@ initGame().then(async (app) => {
     while (totalTime - fixedTime >= FIXED_UPDATE_RATE) {
       fixedTime += FIXED_UPDATE_RATE;
       gameScene.fixedUpdate(FIXED_UPDATE_RATE);
-    }
-
-    if (Keyboard.spaceKey.wasPressedThisFrame) {
-      console.log("Jump!");
     }
 
     gameScene.update();
