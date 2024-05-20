@@ -1,4 +1,6 @@
 import { Resources } from "@app/assets/resources";
+import * as Keyboard from "@gamelab/input-system/keyboard";
+
 import {
   AnimatedSprite,
   type Application,
@@ -49,10 +51,15 @@ export class Bird {
 
     this.collider.x = this.sprite.x;
     this.collider.y = this.sprite.y;
+
+    if (Keyboard.spaceKey.wasPressedThisFrame) {
+      this.yVelocity = -500;
+    }
   }
 
+  /** Updates the bird's physics. Should run on every fixed update. */
   public updatePhysics(fixedDeltaTime: number) {
-    this.yVelocity += 500 * fixedDeltaTime;
+    this.yVelocity += 1000 * fixedDeltaTime;
     this.sprite.y += this.yVelocity * fixedDeltaTime;
   }
 
