@@ -12,9 +12,10 @@ import { FIXED_UPDATE_RATE, MAX_DELTA_TIME, MAX_FPS } from "./constants";
  */
 async function initGame() {
   const app = new Application();
-  const container = document.querySelector("#app") as HTMLDivElement;
+  Object.assign(Application, { instance: app });
 
   // Initialize the Pixi.js application.
+  const container = document.querySelector("#app") as HTMLDivElement;
   await app.init({
     resizeTo: container,
     antialias: true,
@@ -52,9 +53,9 @@ initGame().then(async (app) => {
     // See: https://docs.unity3d.com/uploads/Main/time-flowchart.png
     while (totalTime - fixedTime >= FIXED_UPDATE_RATE) {
       fixedTime += FIXED_UPDATE_RATE;
-      gameScene.fixedUpdate(FIXED_UPDATE_RATE);
+      gameScene.onFixedUpdate(FIXED_UPDATE_RATE);
     }
 
-    gameScene.update();
+    gameScene.onUpdate(deltaTime);
   });
 });
