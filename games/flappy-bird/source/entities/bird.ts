@@ -33,9 +33,25 @@ export class Bird extends AnimatedSprite {
   /** Updates the bird entity. Runs on every frame update. */
   public onUpdate() {
     if (Keyboard.spaceKey.wasPressedThisFrame) {
-      // this.yVelocity = -500;
+      this.jump();
     }
 
+    this.updateCollisionShape();
+  }
+
+  /** Updates the bird's physics. Should run on every fixed update. */
+  public onFixedUpdate(fixedDeltaTime: number) {
+    // this.yVelocity += 1000 * fixedDeltaTime;
+    this.y += this.yVelocity * fixedDeltaTime;
+  }
+
+  /** Makes the bird stop falling and do a little jump.  */
+  public jump() {
+    this.yVelocity = -500;
+  }
+
+  /** Updates the collision shape of the bird entity based on the current bounds. */
+  public updateCollisionShape() {
     // The collision shape is a circle around the bird.
     // We need to calculate it based on the bounds (which are squared).
     const bounds = this.getBounds();
@@ -51,11 +67,5 @@ export class Bird extends AnimatedSprite {
     this.collisionShape.radius = radius;
     this.collisionShape.x = centerX;
     this.collisionShape.y = centerY;
-  }
-
-  /** Updates the bird's physics. Should run on every fixed update. */
-  public updatePhysics(fixedDeltaTime: number) {
-    // this.yVelocity += 1000 * fixedDeltaTime;
-    this.y += this.yVelocity * fixedDeltaTime;
   }
 }

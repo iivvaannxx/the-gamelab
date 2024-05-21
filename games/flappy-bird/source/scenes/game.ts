@@ -62,7 +62,7 @@ class GameScene {
    * @param fixedDeltaTime The fixed time step in seconds.
    */
   public onFixedUpdate(fixedDeltaTime: number) {
-    this.bird.updatePhysics(fixedDeltaTime);
+    this.bird.onFixedUpdate(fixedDeltaTime);
 
     for (const pipe of this.levelPipes.children as Pipe[]) {
       if (pipe.collidesWithBird(this.bird)) {
