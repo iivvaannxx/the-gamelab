@@ -39,13 +39,8 @@ class GameScene {
     this.scoreController = new ScoreController();
 
     this.levelController = new LevelController(this.bird);
-    this.levelController.on("gameover", () => {
-      console.log("Game Over");
-    });
-
-    this.levelController.on("point", () =>
-      this.scoreController.increaseScore(),
-    );
+    this.levelController.on("point", this.onPoint.bind(this));
+    this.levelController.on("gameover", this.onGameOver.bind(this));
 
     this.app.stage.addChild(this.graphics);
     this.app.stage.addChild(this.bird);
@@ -69,6 +64,12 @@ class GameScene {
   public onFixedUpdate(fixedDeltaTime: number) {
     this.bird.onFixedUpdate(fixedDeltaTime);
     this.levelController.onFixedUpdate(fixedDeltaTime);
+  }
+
+  public onGameOver() {}
+
+  public onPoint() {
+    this.scoreController.increaseScore();
   }
 }
 

@@ -26,7 +26,6 @@ export class ScoreController {
   public increaseScore() {
     // The score always increases by 1.
     this.score++;
-    console.log(this.score);
   }
 
   /** Resets the score of the player. */
