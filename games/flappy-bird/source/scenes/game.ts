@@ -39,6 +39,10 @@ class GameScene {
     this.scoreController = new ScoreController();
 
     this.levelController = new LevelController(this.bird);
+    this.levelController.on("gameover", () => {
+      console.log("Game Over");
+    });
+
     this.levelController.on("point", () =>
       this.scoreController.increaseScore(),
     );

@@ -13,13 +13,13 @@ const DEFAULT_GAP_SIZE = 0.5;
 /** Defines the logic for the level (pipe generation, destruction...). */
 export class LevelController extends EventEmitter {
   /** The current gap of the pipes when spawned. */
-  private currentGapSize = 0.5;
+  private currentGapSize = DEFAULT_GAP_SIZE;
 
   /** The timer that controls the spawning rate of pipes. */
-  private spawnTimer;
+  private spawnTimer = PIPE_SPAWN_INTERVAL;
 
   /** The number of pipes that went offscreen (pending for destroy). */
-  private offscreenPipes;
+  private offscreenPipes = 0;
 
   /** The current pipes on the screen. */
   private currentPipes: Pipe[] = [];
@@ -27,7 +27,8 @@ export class LevelController extends EventEmitter {
   /** A reference to the bird entity. */
   private bird: Bird;
 
-  private count = 0;
+  /** Whether the game is over or not. */
+  private gameOver = false;
 
   /** Constructs a new instance of the Level Controller. */
   public constructor(bird: Bird) {
@@ -35,9 +36,6 @@ export class LevelController extends EventEmitter {
 
     // Initialize it so that the first pipes spawn immediately.
     this.spawnTimer = PIPE_SPAWN_INTERVAL;
-    this.currentGapSize = DEFAULT_GAP_SIZE;
-
-    this.offscreenPipes = 0;
     this.bird = bird;
   }
 
@@ -46,8 +44,11 @@ export class LevelController extends EventEmitter {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
+    if (this.gameOver) {
+      return;
+    }
+
     this.spawnTimer += delta;
-    this.count++;
 
     if (this.spawnTimer >= PIPE_SPAWN_INTERVAL) {
       this.spawnPipes();
@@ -84,9 +85,16 @@ export class LevelController extends EventEmitter {
    * @param fixedDeltaTime - The fixed delta time for the update.
    */
   public onFixedUpdate(fixedDeltaTime: number) {
+    if (this.gameOver) {
+      return;
+    }
+
     for (const pipe of this.currentPipes) {
       if (pipe.collidesWithBird(this.bird)) {
-        // GAME OVER!
+        this.bird.die();
+
+        this.gameOver = true;
+        this.emit("gameover");
       }
     }
   }

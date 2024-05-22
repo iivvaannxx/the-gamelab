@@ -8,6 +8,9 @@ export class Bird extends AnimatedSprite {
   /** The bird's vertical velocity. */
   private yVelocity = 0;
 
+  /** Whether the bird is dead or not. */
+  private dead = false;
+
   /** The collision bounds of the bird. */
   private collisionShape: Circle;
 
@@ -47,7 +50,13 @@ export class Bird extends AnimatedSprite {
 
   /** Makes the bird stop falling and do a little jump.  */
   public jump() {
-    this.yVelocity = -500;
+    if (!this.dead) {
+      this.yVelocity = -500;
+    }
+  }
+
+  public die() {
+    this.dead = true;
   }
 
   /** Updates the collision shape of the bird entity based on the current bounds. */
