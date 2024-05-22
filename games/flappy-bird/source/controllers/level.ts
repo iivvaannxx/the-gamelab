@@ -1,4 +1,4 @@
-import { Application } from "pixi.js";
+import { Application, EventEmitter } from "pixi.js";
 
 import type { Bird } from "@app/entities/bird";
 import { Pipe } from "@app/entities/pipe";
@@ -10,8 +10,8 @@ const PIPE_SPAWN_INTERVAL = 2.5;
 /** The default initial gap size. */
 const DEFAULT_GAP_SIZE = 0.5;
 
-/** Defines the logic for the level (difficulty, pipe generation...). */
-export class LevelController {
+/** Defines the logic for the level (pipe generation, destruction...). */
+export class LevelController extends EventEmitter {
   /** The current gap of the pipes when spawned. */
   private currentGapSize = 0.5;
 
@@ -27,8 +27,12 @@ export class LevelController {
   /** A reference to the bird entity. */
   private bird: Bird;
 
+  private count = 0;
+
   /** Constructs a new instance of the Level Controller. */
   public constructor(bird: Bird) {
+    super();
+
     // Initialize it so that the first pipes spawn immediately.
     this.spawnTimer = PIPE_SPAWN_INTERVAL;
     this.currentGapSize = DEFAULT_GAP_SIZE;
@@ -43,14 +47,29 @@ export class LevelController {
    */
   public onUpdate(delta: number) {
     this.spawnTimer += delta;
+    this.count++;
 
     if (this.spawnTimer >= PIPE_SPAWN_INTERVAL) {
       this.spawnPipes();
       this.spawnTimer -= PIPE_SPAWN_INTERVAL;
     }
 
-    for (const pipe of this.currentPipes) {
-      pipe.onUpdate(delta);
+    for (let i = 0; i < this.currentPipes.length - 1; i += 2) {
+      // We only need to check scoring with one, otherwise points are doubled.
+      if (this.currentPipes[i]) {
+        if (
+          this.currentPipes[i].x < this.bird.x &&
+          !this.currentPipes[i].scored
+        ) {
+          // New point scored!
+          this.currentPipes[i].scored = true;
+          this.emit("point");
+        }
+      }
+
+      // Pipes come in pairs of 2 (top, bottom).
+      this.currentPipes[i].onUpdate(delta);
+      this.currentPipes[i + 1].onUpdate(delta);
     }
 
     if (this.offscreenPipes >= 2) {

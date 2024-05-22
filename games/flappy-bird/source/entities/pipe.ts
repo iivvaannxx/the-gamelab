@@ -45,6 +45,9 @@ export class Pipe extends Container {
   /** The collision shape for the body. */
   private bodyCollisionBounds: Rectangle;
 
+  /** Whether the pipe has been scored already or not. */
+  public scored = false;
+
   /**
    * Constructs a new instance of a Pipe (obstacle)
    *

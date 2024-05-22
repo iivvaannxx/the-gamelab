@@ -1,6 +1,7 @@
 import { type Application, Graphics } from "pixi.js";
 
 import { LevelController } from "@app/controllers/level";
+import { ScoreController } from "@app/controllers/score";
 import { Bird } from "@app/entities/bird";
 
 /** Describes the parameters given to the game scene constructor. */
@@ -23,6 +24,9 @@ class GameScene {
   /** The instance of the controller used to to generate the level. */
   private levelController: LevelController;
 
+  /** The instance of the controller used to manage the score. */
+  private scoreController: ScoreController;
+
   /**
    * Initializes the game scene.
    * @param app The Pixi.js application instance.
@@ -32,7 +36,12 @@ class GameScene {
 
     this.bird = new Bird();
     this.graphics = new Graphics();
+    this.scoreController = new ScoreController();
+
     this.levelController = new LevelController(this.bird);
+    this.levelController.on("point", () =>
+      this.scoreController.increaseScore(),
+    );
 
     this.app.stage.addChild(this.graphics);
     this.app.stage.addChild(this.bird);
