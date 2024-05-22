@@ -4,6 +4,9 @@ import { LevelController } from "@app/controllers/level";
 import { ScoreController } from "@app/controllers/score";
 import { Bird } from "@app/entities/bird";
 
+import { Resources } from "@app/assets/resources";
+import * as Keyboard from "@gamelab/input-system/keyboard";
+
 /** Describes the parameters given to the game scene constructor. */
 type GameSceneInit = {
   /** The instance of the Pixi.js application. */
@@ -26,6 +29,8 @@ class GameScene {
 
   /** The instance of the controller used to manage the score. */
   private scoreController: ScoreController;
+
+  private started = false;
 
   /**
    * Initializes the game scene.
@@ -51,6 +56,14 @@ class GameScene {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
+    if (Keyboard.spaceKey.wasPressedThisFrame) {
+      this.started = true;
+    }
+
+    if (!this.started) {
+      return;
+    }
+
     this.graphics.clear();
     this.bird.onUpdate();
 
@@ -62,6 +75,10 @@ class GameScene {
    * @param fixedDeltaTime The fixed time step in seconds.
    */
   public onFixedUpdate(fixedDeltaTime: number) {
+    if (!this.started) {
+      return;
+    }
+
     this.bird.onFixedUpdate(fixedDeltaTime);
     this.levelController.onFixedUpdate(fixedDeltaTime);
   }
@@ -70,6 +87,7 @@ class GameScene {
 
   public onPoint() {
     this.scoreController.increaseScore();
+    Resources.pointSound.play();
   }
 }
 

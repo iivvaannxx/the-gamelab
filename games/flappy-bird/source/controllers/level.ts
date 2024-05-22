@@ -8,7 +8,7 @@ import { randomFloatRange } from "@app/utils";
 const PIPE_SPAWN_INTERVAL = 2.5;
 
 /** The default initial gap size. */
-const DEFAULT_GAP_SIZE = 0.5;
+const DEFAULT_GAP_SIZE = 0.25;
 
 /** Defines the logic for the level (pipe generation, destruction...). */
 export class LevelController extends EventEmitter {

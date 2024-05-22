@@ -133,8 +133,8 @@ export class Pipe extends Container {
     normalizedHeight: number,
     type: "top" | "bottom",
   ) {
-    const bodyTex = Resources.spritesheet.textures.pipeBody;
-    const headTex = Resources.spritesheet.textures.pipeHead;
+    const bodyTex = Resources.spritesheet2.textures.pipeBody;
+    const headTex = Resources.spritesheet2.textures.pipeHead;
     const head = new Sprite(headTex);
     const headBounds = head.getBounds();
 

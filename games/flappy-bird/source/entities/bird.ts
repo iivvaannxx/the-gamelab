@@ -21,7 +21,7 @@ export class Bird extends AnimatedSprite {
 
   /** Constructs a new entity of the Bird (player). */
   constructor() {
-    const animationTextures = Resources.spritesheet.animations.bird;
+    const animationTextures = Resources.spritesheet2.animations.blueBird;
     super(animationTextures);
 
     this.anchor.set(0.5);
@@ -44,19 +44,21 @@ export class Bird extends AnimatedSprite {
 
   /** Updates the bird's physics. Should run on every fixed update. */
   public onFixedUpdate(fixedDeltaTime: number) {
-    // this.yVelocity += 1000 * fixedDeltaTime;
+    this.yVelocity += 4000 * fixedDeltaTime;
     this.y += this.yVelocity * fixedDeltaTime;
   }
 
   /** Makes the bird stop falling and do a little jump.  */
   public jump() {
     if (!this.dead) {
-      this.yVelocity = -500;
+      this.yVelocity = -1500;
+      Resources.wingSound.play();
     }
   }
 
   public die() {
     this.dead = true;
+    Resources.hitSound.play();
   }
 
   /** Updates the collision shape of the bird entity based on the current bounds. */

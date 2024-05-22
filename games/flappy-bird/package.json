@@ -1,22 +1,19 @@
 {
   "name": "@gamelab/flappy-bird",
   "description": "Flappy Bird game made with Pixi.js",
-
   "private": true,
   "version": "1.0.0",
   "type": "module",
-
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-
   "dependencies": {
     "@gamelab/input-system": "workspace:^",
+    "@pixi/sound": "^6.0.0",
     "pixi.js": "^8.1.4"
   },
-
   "devDependencies": {
     "type-fest": "^4.18.2",
     "typescript": "^5.2.2",
