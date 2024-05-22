@@ -25,7 +25,7 @@ export class Bird extends AnimatedSprite {
     this.animationSpeed = 0.1;
     this.play();
 
-    this.x = Application.instance.screen.width / 2;
+    this.x = Application.instance.screen.width / 3;
     this.y = Application.instance.screen.height / 2;
     this.collisionShape = new Circle();
   }

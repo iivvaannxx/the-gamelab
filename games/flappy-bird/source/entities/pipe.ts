@@ -10,6 +10,12 @@ import { Resources } from "@app/assets/resources";
 import type { Bird } from "@app/entities/bird";
 import { rectangleIntersectsCircle } from "@app/utils";
 
+/** The speed at which the pipe moves. */
+const PIPE_MOVE_SPEED = 250;
+
+/** The x position where the pipe should be destroyed. */
+const PIPE_DESTROY_X = -200;
+
 /** Describes the creation options for a pipe object.  */
 export type PipeInitOptions = {
   /**
@@ -45,14 +51,20 @@ export class Pipe extends Container {
    * @param app The Pixi.js application instance.
    * @param options The options for initializing the pipe.
    */
-  constructor(options: PipeInitOptions) {
+  constructor({ normalizedHeight, type, xPosition }: PipeInitOptions) {
     super();
 
     const screenHeight = Application.instance.screen.height;
-    const { body, head } = this.createComponents(screenHeight, options);
+    const { body, head } = this.createComponents(
+      screenHeight,
+      normalizedHeight,
+      type,
+    );
 
+    this.x = xPosition;
     this.body = body;
     this.head = head;
+
     this.headCollisionBounds = Rectangle.EMPTY;
     this.bodyCollisionBounds = Rectangle.EMPTY;
 
@@ -60,12 +72,13 @@ export class Pipe extends Container {
     this.addChild(this.head);
   }
 
-  /** Updates the pipe entity. Runs once on every frame. */
-  public onUpdate() {
-    const bodyBounds = this.body.getBounds();
-    const headBounds = this.head.getBounds();
-    this.headCollisionBounds.copyFromBounds(headBounds);
-    this.bodyCollisionBounds.copyFromBounds(bodyBounds);
+  /**
+   * Updates the pipe entity. Runs once on every frame.
+   * @param delta The time in seconds since the last frame.
+   */
+  public onUpdate(delta: number) {
+    this.updateCollisionBounds();
+    this.move(delta);
   }
 
   /**
@@ -87,6 +100,24 @@ export class Pipe extends Container {
     );
   }
 
+  /** Moves the pipe at linear constant velocity. */
+  private move(delta: number) {
+    this.x -= PIPE_MOVE_SPEED * delta;
+
+    // Is offscreen:
+    if (this.x < PIPE_DESTROY_X) {
+      this.destroy();
+    }
+  }
+
+  /** Updates the collision bounds of the pipe entity. */
+  private updateCollisionBounds() {
+    const bodyBounds = this.body.getBounds();
+    const headBounds = this.head.getBounds();
+    this.headCollisionBounds.copyFromBounds(headBounds);
+    this.bodyCollisionBounds.copyFromBounds(bodyBounds);
+  }
+
   /**
    * Creates the components (head and body) for a pipe entity.
    *
@@ -96,7 +127,8 @@ export class Pipe extends Container {
    */
   private createComponents(
     screenHeight: number,
-    { normalizedHeight, type, xPosition }: PipeInitOptions,
+    normalizedHeight: number,
+    type: "top" | "bottom",
   ) {
     const bodyTex = Resources.spritesheet.textures.pipeBody;
     const headTex = Resources.spritesheet.textures.pipeHead;
@@ -107,16 +139,13 @@ export class Pipe extends Container {
       texture: bodyTex,
 
       // We want the height to be body.height + head.height (and not just body.height).
-      // The +4 is just a hardcoded adjusment.
-      height: normalizedHeight * screenHeight - headBounds.height + 4,
+      height: Math.max(normalizedHeight * screenHeight - headBounds.height, 0),
     });
 
     // We want the anchor to be at the bottom-center.
     // Then it will grow from the bottom and not on both ends.
     body.anchor = head.anchor = { x: 0.5, y: 1 };
     body.rotation = head.rotation = 0;
-
-    body.position.x = head.position.x = xPosition;
     body.position.y = screenHeight;
 
     const pipeHeight = body.getBounds().height;
