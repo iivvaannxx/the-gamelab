@@ -1,17 +1,10 @@
-import {
-  AnimatedSprite,
-  type Application,
-  type Container,
-  Graphics,
-  Sprite,
-} from "pixi.js";
+import { type Application, Container } from "pixi.js";
 
-import { LevelController } from "@app/controllers/level";
-import { ScoreController } from "@app/controllers/score";
-import { Bird } from "@app/entities/bird";
+import { LevelController } from "@app/scripts/controllers/level";
+import { ScoreController } from "@app/scripts/controllers/score";
+import { Bird } from "@app/scripts/entities/bird";
 
 import { Resources } from "@app/assets/resources";
-import { ASPECT_RATIO } from "@app/constants";
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Describes the parameters given to the game scene constructor. */
@@ -21,15 +14,12 @@ type GameSceneInit = {
 };
 
 /** Defines all the logic of the game. */
-class GameScene {
+class GameScene extends Container {
   /** The instance of our application. */
   private app: Application;
 
   /** The instance to the bird entity (player) */
   private bird: Bird;
-
-  /** The global graphics instance used to draw on the scene. */
-  private graphics: Graphics;
 
   /** The instance of the controller used to to generate the level. */
   private levelController: LevelController;
@@ -44,18 +34,17 @@ class GameScene {
    * @param app The Pixi.js application instance.
    */
   constructor({ app }: GameSceneInit) {
+    super();
     this.app = app;
 
     this.bird = new Bird();
-    this.graphics = new Graphics();
     this.scoreController = new ScoreController();
 
     this.levelController = new LevelController(this.bird);
     this.levelController.on("point", this.onPoint.bind(this));
     this.levelController.on("gameover", this.onGameOver.bind(this));
 
-    this.app.stage.addChild(this.graphics);
-    this.app.stage.addChild(this.bird);
+    this.addChild(this.bird);
   }
 
   /**
@@ -71,9 +60,7 @@ class GameScene {
       return;
     }
 
-    this.graphics.clear();
     this.bird.onUpdate();
-
     this.levelController.onUpdate(delta);
   }
 
@@ -120,3 +107,5 @@ export function getGameScene(init: GameSceneInit) {
   gameScene = new GameScene(init);
   return gameScene;
 }
+
+export type { GameScene };

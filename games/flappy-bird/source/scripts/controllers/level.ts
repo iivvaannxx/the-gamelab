@@ -1,7 +1,6 @@
-import { Application, EventEmitter, Sprite } from "pixi.js";
+import { EventEmitter } from "pixi.js";
 
-import { Resources } from "@app/assets/resources";
-import type { Bird } from "@app/entities/bird";
+import type { Bird } from "@app/scripts/entities/bird";
 
 /** The interval at which pipes spawn. */
 const PIPE_SPAWN_INTERVAL = 2.5;
@@ -12,21 +11,21 @@ export class LevelController extends EventEmitter {
   private spawnTimer = PIPE_SPAWN_INTERVAL;
 
   /** The number of pipes that went offscreen (pending for destroy). */
-  private offscreenPipes = 0;
+  // private offscreenPipes = 0;
 
   /** A reference to the bird entity. */
-  private bird: Bird;
+  // private bird: Bird;
 
   /** Whether the game is over or not. */
   private gameOver = false;
 
   /** Constructs a new instance of the Level Controller. */
-  public constructor(bird: Bird) {
+  public constructor(_bird: Bird) {
     super();
 
     // Initialize it so that the first pipes spawn immediately.
     this.spawnTimer = PIPE_SPAWN_INTERVAL;
-    this.bird = bird;
+    // this.bird = bird;
   }
 
   /**
@@ -73,7 +72,7 @@ export class LevelController extends EventEmitter {
    * Handles the fixed update logic for the level.
    * @param fixedDeltaTime - The fixed delta time for the update.
    */
-  public onFixedUpdate(fixedDeltaTime: number) {
+  public onFixedUpdate(_fixedDeltaTime: number) {
     if (this.gameOver) {
       return;
     }

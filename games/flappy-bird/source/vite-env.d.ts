@@ -13,11 +13,5 @@ declare module "pixi.js" {
 
     /** The current instance of the application. */
     const instance: Application;
-
-    /**
-     * The initial height of the application.
-     * Used as a reference to uniformly scale the application.
-     */
-    const initialHeight: number;
   }
 }

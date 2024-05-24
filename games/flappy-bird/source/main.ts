@@ -2,25 +2,17 @@ import { Application } from "pixi.js";
 
 import "@app/styles/main.css";
 import { Resources } from "@app/assets/resources";
+import { Ground } from "@app/scripts/entities/ground";
+import { EventLoop } from "@app/scripts/event-loop";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
-import {
-  ASPECT_RATIO,
-  FIXED_UPDATE_RATE,
-  MAX_DELTA_TIME,
-  MAX_FPS,
-} from "./constants";
 
 /**
  * Initializes the Flappy Bird game.
  * @returns The instance of the application.
  */
-async function initGame() {
+async function init() {
   const container = document.querySelector("#app") as HTMLDivElement;
-  document.documentElement.style.setProperty(
-    "--aspect-ratio",
-    `${ASPECT_RATIO}`,
-  );
 
   // Initialize the Pixi.js application.
   const app = new Application();
@@ -28,9 +20,8 @@ async function initGame() {
     resizeTo: container,
     resolution: Math.min(3, window.devicePixelRatio),
     autoDensity: true,
-    eventMode: "none",
 
-    // We use a transparent background. The gradient is set from CSS.
+    // We use a transparent background. The background is set from CSS.
     backgroundAlpha: 0,
   });
 
@@ -40,46 +31,53 @@ async function initGame() {
   await Resources.init();
   Keyboard.init();
 
-  Object.assign(Application, {
-    instance: app,
-    initialHeight: app.screen.height,
-  });
-
+  Object.assign(Application, { instance: app });
   return app;
 }
 
-// Entrypoint of the game.
-initGame().then(async (app) => {
+/**
+ * Starts the game.
+ * @param app - The application instance.
+ */
+async function start(app: Application) {
+  const { getMenuScene } = await import("./scenes/menu");
   const { getGameScene } = await import("./scenes/game");
+
+  const menuScene = getMenuScene();
   const gameScene = getGameScene({ app });
+  gameScene.visible = false;
 
-  let totalTime = 0;
-  let fixedTime = 0;
-  let lastWidth = app.screen.width;
-  let lastHeight = app.screen.height;
-  gameScene.onResize(lastWidth, lastHeight);
-
-  app.ticker.maxFPS = MAX_FPS;
-  app.ticker.add((ticker) => {
-    // Update input modules.
-    Keyboard.update();
-
-    if (lastWidth !== app.screen.width || lastHeight !== app.screen.height) {
-      lastWidth = app.screen.width;
-      lastHeight = app.screen.height;
-
-      gameScene.onResize(lastWidth, lastHeight);
-    }
-
-    const deltaTime = Math.min(ticker.deltaMS / 1000, MAX_DELTA_TIME);
-    totalTime += deltaTime;
-
-    // See: https://docs.unity3d.com/uploads/Main/time-flowchart.png
-    while (totalTime - fixedTime >= FIXED_UPDATE_RATE) {
-      fixedTime += FIXED_UPDATE_RATE;
-      gameScene.onFixedUpdate(FIXED_UPDATE_RATE);
-    }
-
-    gameScene.onUpdate(deltaTime);
+  menuScene.on("game", () => {
+    menuScene.visible = false;
+    gameScene.visible = true;
   });
-});
+
+  // The ground is always on screen. We can create it here.
+  const ground = new Ground(50);
+  app.stage.addChild(ground, menuScene, gameScene);
+
+  const eventLoop = new EventLoop(app);
+  eventLoop.on("update", (delta) => {
+    Keyboard.update();
+    ground.onUpdate(delta);
+
+    if (gameScene.visible) {
+      gameScene.onUpdate(delta);
+    }
+  });
+
+  eventLoop.on("fixedUpdate", (fixedDelta) => {
+    if (gameScene.visible) {
+      gameScene.onFixedUpdate(fixedDelta);
+    }
+  });
+
+  eventLoop.on("resize", (width, height) => {
+    ground.onResize(width, height);
+    menuScene.onResize(width, height);
+    gameScene.onResize(width, height);
+  });
+}
+
+// Entrypoint of the game.
+init().then(start);

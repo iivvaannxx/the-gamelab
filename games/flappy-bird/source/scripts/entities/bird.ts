@@ -1,4 +1,4 @@
-import { AnimatedSprite, Application, Circle } from "pixi.js";
+import { AnimatedSprite, Circle } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
 import * as Keyboard from "@gamelab/input-system/keyboard";
@@ -14,7 +14,7 @@ export class Bird extends AnimatedSprite {
   private dead = false;
 
   /** The collision bounds of the bird. */
-  private collisionShape: Circle;
+  private collisionShape = new Circle();
 
   /** The collision bounds of the bird. */
   public get collisionBounds() {
@@ -23,16 +23,11 @@ export class Bird extends AnimatedSprite {
 
   /** Constructs a new entity of the Bird (player). */
   constructor() {
-    const animationTextures = Resources.spritesheet3.animations.bird;
+    const animationTextures = Resources.spritesheet.animations.bird;
     super(animationTextures);
 
-    this.anchor.set(0.5);
     this.animationSpeed = 0.1;
     this.play();
-
-    this.x = Application.instance.screen.width / 3;
-    this.y = (Application.instance.screen.height * 0.85) / 2;
-    this.collisionShape = new Circle();
   }
 
   /** Updates the bird entity. Runs on every frame update. */

@@ -1,19 +1,13 @@
+import { Sound } from "@pixi/sound";
 import { Assets, type Texture } from "pixi.js";
 
-import { manifest, soundsManifest } from "@app/assets/manifest";
+import { manifest } from "@app/assets/manifest";
 import { type GameSpritesheet, getSpritesheet } from "@app/assets/spritesheet";
-import { Sound } from "@pixi/sound";
-import { type GameSpritesheet2, getSpritesheet2 } from "./spritesheet2";
-import { type GameSpritesheet3, getSpritesheet3 } from "./spritesheet3";
 
 /** A little helper to easily access the resources of our game. */
 export class Resources {
   /** The spritesheet with all our game textures. */
   public static spritesheet: GameSpritesheet;
-
-  public static spritesheet2: GameSpritesheet2;
-
-  public static spritesheet3: GameSpritesheet3;
 
   public static dieSound: Sound;
   public static hitSound: Sound;
@@ -30,10 +24,9 @@ export class Resources {
     Assets.backgroundLoadBundle("game");
 
     Resources.spritesheet = await getSpritesheet();
-    Resources.spritesheet3 = await getSpritesheet3();
 
     for (const tex of Object.values(
-      Resources.spritesheet3.textures,
+      Resources.spritesheet.textures,
     ) as Texture[]) {
       tex.source.scaleMode = "nearest";
     }

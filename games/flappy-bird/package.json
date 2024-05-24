@@ -12,6 +12,7 @@
   "dependencies": {
     "@gamelab/input-system": "workspace:^",
     "@pixi/sound": "^6.0.0",
+    "gsap": "^3.12.5",
     "pixi.js": "^8.1.4"
   },
   "devDependencies": {

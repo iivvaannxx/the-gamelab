@@ -37,17 +37,6 @@ export function rectangleIntersectsCircle(
   const distanceY = circle.y - closestY;
   const distanceSquared = distanceX ** 2 + distanceY ** 2;
 
-  // We compare the squared distance as it's faster to compute.
+  // We compare the squared distance as it's faster to compute than the square root.
   return distanceSquared < circle.radius ** 2;
-}
-
-/**
- * Generates a random floating-point number within the specified range.
- *
- * @param min - The minimum value of the range (inclusive).
- * @param max - The maximum value of the range (inclusive).
- * @returns A random floating-point number within the specified range.
- */
-export function randomFloatRange(min: number, max: number) {
-  return Math.random() * (max - min + Number.EPSILON) + min;
 }
