@@ -15,6 +15,11 @@ export const manifest: AssetsManifest = {
           alias: "spritesheet2",
           src: "/assets/spritesheet2.webp",
         },
+
+        {
+          alias: "spritesheet3",
+          src: "/assets/images/spritesheet.webp",
+        },
       ],
     },
   ],

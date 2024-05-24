@@ -4,21 +4,30 @@ import "@app/styles/main.css";
 import { Resources } from "@app/assets/resources";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
-import { FIXED_UPDATE_RATE, MAX_DELTA_TIME, MAX_FPS } from "./constants";
+import {
+  ASPECT_RATIO,
+  FIXED_UPDATE_RATE,
+  MAX_DELTA_TIME,
+  MAX_FPS,
+} from "./constants";
 
 /**
  * Initializes the Flappy Bird game.
  * @returns The instance of the application.
  */
 async function initGame() {
-  const app = new Application();
-  Object.assign(Application, { instance: app });
+  const container = document.querySelector("#app") as HTMLDivElement;
+  document.documentElement.style.setProperty(
+    "--aspect-ratio",
+    `${ASPECT_RATIO}`,
+  );
 
   // Initialize the Pixi.js application.
-  const container = document.querySelector("#app") as HTMLDivElement;
+  const app = new Application();
   await app.init({
     resizeTo: container,
-    antialias: true,
+    resolution: Math.min(3, window.devicePixelRatio),
+    autoDensity: true,
     eventMode: "none",
 
     // We use a transparent background. The gradient is set from CSS.
@@ -31,6 +40,11 @@ async function initGame() {
   await Resources.init();
   Keyboard.init();
 
+  Object.assign(Application, {
+    instance: app,
+    initialHeight: app.screen.height,
+  });
+
   return app;
 }
 
@@ -41,11 +55,21 @@ initGame().then(async (app) => {
 
   let totalTime = 0;
   let fixedTime = 0;
+  let lastWidth = app.screen.width;
+  let lastHeight = app.screen.height;
+  gameScene.onResize(lastWidth, lastHeight);
 
   app.ticker.maxFPS = MAX_FPS;
   app.ticker.add((ticker) => {
     // Update input modules.
     Keyboard.update();
+
+    if (lastWidth !== app.screen.width || lastHeight !== app.screen.height) {
+      lastWidth = app.screen.width;
+      lastHeight = app.screen.height;
+
+      gameScene.onResize(lastWidth, lastHeight);
+    }
 
     const deltaTime = Math.min(ticker.deltaMS / 1000, MAX_DELTA_TIME);
     totalTime += deltaTime;

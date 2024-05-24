@@ -1,10 +1,17 @@
-import { type Application, Graphics } from "pixi.js";
+import {
+  AnimatedSprite,
+  type Application,
+  type Container,
+  Graphics,
+  Sprite,
+} from "pixi.js";
 
 import { LevelController } from "@app/controllers/level";
 import { ScoreController } from "@app/controllers/score";
 import { Bird } from "@app/entities/bird";
 
 import { Resources } from "@app/assets/resources";
+import { ASPECT_RATIO } from "@app/constants";
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Describes the parameters given to the game scene constructor. */
@@ -81,6 +88,10 @@ class GameScene {
 
     this.bird.onFixedUpdate(fixedDeltaTime);
     this.levelController.onFixedUpdate(fixedDeltaTime);
+  }
+
+  public onResize(newCanvasWidth: number, newCanvasHeight: number) {
+    this.bird.onResize(newCanvasWidth, newCanvasHeight);
   }
 
   public onGameOver() {}

@@ -1,10 +1,5 @@
 @import "./reset.css";
 
-:root {
-
-  --background-start: #6bcde5;
-  --background-end: #d6feff;
-}
 
 html,
 body {
@@ -13,17 +8,50 @@ body {
   width: 100%;
   height: 100%;
 
+  background-color: #121212;
   -webkit-tap-highlight-color: transparent;
+}
+
+body {
+
+  container-type: size;
+  height: 100%;
+}
+
+#responsive-wrapper {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
 }
 
 #app {
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  aspect-ratio: 9 / 16;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--background-start), var(--background-end));
+  height: auto;
+
+  background-image: url("/assets/images/background.png");
+  background-size: cover;
+  image-rendering: pixelated;
 
   animation: fade-in 1s ease-in-out forwards;
   opacity: 0;
+}
+
+@container (min-aspect-ratio: 9 / 16) {
+
+  #app {
+
+    width: auto;
+    height: 100%;
+  }
 }
 
 @keyframes fade-in {

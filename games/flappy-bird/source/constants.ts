@@ -6,3 +6,6 @@ export const MAX_FPS = 144;
 
 /** The maximum delta time we allow. */
 export const MAX_DELTA_TIME = 1 / 3;
+
+/** The aspect ratio of the game. */
+export const ASPECT_RATIO = 12 / 16;

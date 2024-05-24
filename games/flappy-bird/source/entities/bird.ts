@@ -3,6 +3,8 @@ import { AnimatedSprite, Application, Circle } from "pixi.js";
 import { Resources } from "@app/assets/resources";
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
+const REFERENCE_HEIGHT = 240;
+
 /** Defines the logic for the Bird (player). */
 export class Bird extends AnimatedSprite {
   /** The bird's vertical velocity. */
@@ -21,7 +23,7 @@ export class Bird extends AnimatedSprite {
 
   /** Constructs a new entity of the Bird (player). */
   constructor() {
-    const animationTextures = Resources.spritesheet2.animations.blueBird;
+    const animationTextures = Resources.spritesheet3.animations.bird;
     super(animationTextures);
 
     this.anchor.set(0.5);
@@ -29,7 +31,7 @@ export class Bird extends AnimatedSprite {
     this.play();
 
     this.x = Application.instance.screen.width / 3;
-    this.y = Application.instance.screen.height / 2;
+    this.y = (Application.instance.screen.height * 0.85) / 2;
     this.collisionShape = new Circle();
   }
 
@@ -46,6 +48,20 @@ export class Bird extends AnimatedSprite {
   public onFixedUpdate(fixedDeltaTime: number) {
     this.yVelocity += 4000 * fixedDeltaTime;
     this.y += this.yVelocity * fixedDeltaTime;
+
+    if (this.y - this.height / 2 < 0) {
+      this.y = this.height / 2;
+      this.yVelocity = 0;
+    }
+  }
+
+  public onResize(newCanvasWidth: number, newCanvasHeight: number) {
+    this.x = newCanvasWidth / 3;
+    this.y = newCanvasHeight / 2;
+
+    this.scale.set(
+      Math.min(newCanvasHeight, newCanvasWidth) / REFERENCE_HEIGHT,
+    );
   }
 
   /** Makes the bird stop falling and do a little jump.  */
