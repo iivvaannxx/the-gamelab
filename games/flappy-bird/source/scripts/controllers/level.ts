@@ -8,16 +8,9 @@ export class LevelController extends Container {
   /** The interval at which pipes spawn. */
   private static readonly PIPE_SPAWN_INTERVAL = 2.5;
 
-  /** The timer that controls the spawning rate of pipes. */
   private spawnTimer: number;
-
-  /** A reference to the bird entity. */
   private bird: Bird;
-
-  /** A reference to the ground entity. */
   private ground: Ground;
-
-  /** Whether the game has ended or not. */
   private gameOver = false;
 
   /** Constructs a new instance of the Level Controller. */

@@ -6,7 +6,6 @@ import { Overlay } from "@app/scripts/ui/overlay";
 
 /** Defines all the logic of the menu. */
 class MenuScene extends Container {
-  /** The menu user interface container. */
   private ui: MenuUI;
 
   constructor() {

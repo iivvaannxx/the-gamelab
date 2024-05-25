@@ -1,9 +1,6 @@
 /** Defines the logic for the game score. */
 export class ScoreController {
-  /** The current score of the player. */
   private score = 0;
-
-  /** The high score of the player. */
   private highScore = 0;
 
   /** Gets the current score of the player. */

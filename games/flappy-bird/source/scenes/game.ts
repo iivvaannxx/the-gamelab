@@ -18,16 +18,9 @@ enum GameState {
 
 /** Defines all the logic of the game. */
 class GameScene extends Container {
-  /** The instance of the controller used to to generate the level. */
   private levelController: LevelController;
-
-  /** The instance of the controller used to manage the score. */
   private scoreController: ScoreController;
-
-  /** The game user interface container. */
   private ui: GameUI;
-
-  /** The current state of the game. */
   private state: GameState;
 
   constructor(ground: Ground) {

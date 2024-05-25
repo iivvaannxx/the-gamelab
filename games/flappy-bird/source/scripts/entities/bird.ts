@@ -10,13 +10,8 @@ export class Bird extends AnimatedSprite {
   /** The velocity at which the bird tilts. */
   private static readonly ANGULAR_VELOCITY = 8;
 
-  /** The bird's vertical velocity. */
   private yVelocity = 0;
-
-  /** Whether the bird is dead or not. */
   private dead = false;
-
-  /** The collision bounds of the bird. */
   private collisionShape = new Circle();
 
   /** The collision bounds of the bird. */

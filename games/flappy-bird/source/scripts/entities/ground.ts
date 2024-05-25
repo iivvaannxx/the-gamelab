@@ -4,7 +4,6 @@ import { TilingSprite } from "pixi.js";
 
 /** Defines the logic for the ground entity.  */
 export class Ground extends TilingSprite {
-  /** The speed at which the ground moves. */
   private speed: number;
 
   /** The Y coordinate of the ground surface. */
