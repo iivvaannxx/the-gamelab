@@ -1,7 +1,7 @@
 import { AnimatedSprite, Circle } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
-import { getResponsiveScale } from "@app/utils/screen";
+import { getGameAreaSize, getResponsiveScale } from "@app/utils/screen";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
@@ -10,9 +10,10 @@ export class Bird extends AnimatedSprite {
   /** The velocity at which the bird tilts. */
   private static readonly ANGULAR_VELOCITY = 8;
 
-  private yVelocity = 0;
-  private dead = false;
   private collisionShape = new Circle();
+  private dead = false;
+  private screenRelativeY = 0;
+  private yVelocity = 0;
 
   /** The collision bounds of the bird. */
   public get collider() {
@@ -30,6 +31,9 @@ export class Bird extends AnimatedSprite {
 
     this.animationSpeed = 0.1;
     this.play();
+
+    // The bird starts at the middle of the screen.
+    this.screenRelativeY = 0.5;
   }
 
   /**
@@ -46,6 +50,9 @@ export class Bird extends AnimatedSprite {
     if (Keyboard.spaceKey.wasPressedThisFrame) {
       this.jump();
     }
+
+    const { height } = getGameAreaSize();
+    this.screenRelativeY = this.y / height;
   }
 
   /**
@@ -70,12 +77,12 @@ export class Bird extends AnimatedSprite {
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.x = newCanvasWidth / 3;
-    this.y = newCanvasHeight / 2;
-
-    this.updateCollisionShape();
+    this.y = this.screenRelativeY * newCanvasHeight;
 
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
     this.scale.set(scale);
+
+    this.updateCollisionShape();
   }
 
   /** Sets the bird state to be dead. */
