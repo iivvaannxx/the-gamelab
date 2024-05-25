@@ -3,16 +3,16 @@ import { Container, Sprite } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
 import { Bird } from "@app/scripts/entities/bird";
-import { ButtonSprite } from "@app/scripts/ui/button-sprite";
+import { SpriteButton } from "@app/scripts/ui/sprite-button";
 
 import type { ResponsiveElement } from "@app/types";
-import { getGameAreaSize } from "@app/utils/screen";
+import { getGameAreaSize, getResponsiveScale } from "@app/utils/screen";
 
-/** Defines the logic for the UI of the menu (responsiveness, buttons...) */
+/** Defines the logic for the UI of the menu (buttons, title...) */
 export class MenuUI extends Container {
   private copyright: ResponsiveElement<Sprite>;
-  private startButton: ResponsiveElement<ButtonSprite>;
-  private scoreButton: ResponsiveElement<ButtonSprite>;
+  private startButton: ResponsiveElement<SpriteButton>;
+  private scoreButton: ResponsiveElement<SpriteButton>;
   private logo: ResponsiveElement<Container>;
 
   constructor() {
@@ -29,15 +29,15 @@ export class MenuUI extends Container {
 
   /** Event fired when the game screen gets resized. */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
-    const scaleFactor = Math.min(newCanvasWidth, newCanvasHeight) / 140;
-
     this.logo.onGameResize(newCanvasWidth, newCanvasHeight);
     this.startButton.onGameResize(newCanvasWidth, newCanvasHeight);
     this.scoreButton.onGameResize(newCanvasWidth, newCanvasHeight);
     this.copyright.onGameResize(newCanvasWidth, newCanvasHeight);
 
+    const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
+
     for (const child of this.children) {
-      child.scale.set(scaleFactor);
+      child.scale.set(scale);
     }
   }
 
@@ -108,7 +108,7 @@ export class MenuUI extends Container {
 
   /** Creates and sets up the "START" button in the UI. */
   private setupStartButton() {
-    const startButton = new ButtonSprite(
+    const startButton = new SpriteButton(
       Resources.spritesheet.textures.startButton,
       {
         onPointerDown: () => this.emit("start"),
@@ -127,7 +127,7 @@ export class MenuUI extends Container {
 
   /** Creates and sets up the "SCORE" button in the UI. */
   private setupScoreButton() {
-    const scoreButton = new ButtonSprite(
+    const scoreButton = new SpriteButton(
       Resources.spritesheet.textures.scoreButton,
       {
         onPointerDown: () => {

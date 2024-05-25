@@ -4,9 +4,9 @@ import { Resources } from "@app/assets/resources";
 import { MenuUI } from "@app/scripts/ui/menu-ui";
 import { Overlay } from "@app/scripts/ui/overlay";
 
-/** Contains all the objects present on the menu screen. */
+/** Defines all the logic of the menu. */
 class MenuScene extends Container {
-  /** The user interface container. */
+  /** The menu user interface container. */
   private ui: MenuUI;
 
   constructor() {

@@ -10,7 +10,7 @@ type Events = {
 };
 
 /** Defines a simple sprite which is intended to be used as a button. */
-export class ButtonSprite extends Sprite {
+export class SpriteButton extends Sprite {
   constructor(texture: Texture, { onPointerDown, onPointerUp }: Events) {
     super({ texture, eventMode: "static" });
     let onBeforeHoverScale: ObservablePoint;

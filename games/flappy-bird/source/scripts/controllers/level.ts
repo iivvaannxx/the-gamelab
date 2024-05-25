@@ -1,31 +1,35 @@
-import { EventEmitter } from "pixi.js";
+import { Container } from "pixi.js";
 
-import type { Bird } from "@app/scripts/entities/bird";
+import { Bird } from "@app/scripts/entities/bird";
+import type { Ground } from "@app/scripts/entities/ground";
 
-/** The interval at which pipes spawn. */
-const PIPE_SPAWN_INTERVAL = 2.5;
+/** Defines the logic for the level (pipe generation, ground collision...). */
+export class LevelController extends Container {
+  /** The interval at which pipes spawn. */
+  private static readonly PIPE_SPAWN_INTERVAL = 2.5;
 
-/** Defines the logic for the level (pipe generation, destruction...). */
-export class LevelController extends EventEmitter {
   /** The timer that controls the spawning rate of pipes. */
-  private spawnTimer = PIPE_SPAWN_INTERVAL;
-
-  /** The number of pipes that went offscreen (pending for destroy). */
-  // private offscreenPipes = 0;
+  private spawnTimer: number;
 
   /** A reference to the bird entity. */
-  // private bird: Bird;
+  private bird: Bird;
 
-  /** Whether the game is over or not. */
+  /** A reference to the ground entity. */
+  private ground: Ground;
+
+  /** Whether the game has ended or not. */
   private gameOver = false;
 
   /** Constructs a new instance of the Level Controller. */
-  public constructor(_bird: Bird) {
+  public constructor(ground: Ground) {
     super();
 
     // Initialize it so that the first pipes spawn immediately.
-    this.spawnTimer = PIPE_SPAWN_INTERVAL;
-    // this.bird = bird;
+    this.spawnTimer = LevelController.PIPE_SPAWN_INTERVAL;
+    this.ground = ground;
+
+    this.bird = new Bird();
+    this.addChild(this.bird);
   }
 
   /**
@@ -33,57 +37,57 @@ export class LevelController extends EventEmitter {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
-    if (this.gameOver) {
-      return;
-    }
-
     this.spawnTimer += delta;
 
-    if (this.spawnTimer >= PIPE_SPAWN_INTERVAL) {
-      this.spawnTimer -= PIPE_SPAWN_INTERVAL;
+    if (this.spawnTimer >= LevelController.PIPE_SPAWN_INTERVAL) {
+      this.spawnTimer -= LevelController.PIPE_SPAWN_INTERVAL;
     }
 
-    /* for (let i = 0; i < this.currentPipes.length - 1; i += 2) {
-      // We only need to check scoring with one, otherwise points are doubled.
-      if (this.currentPipes[i]) {
-        if (
-          this.currentPipes[i].x < this.bird.x &&
-          !this.currentPipes[i].scored
-        ) {
-          // New point scored!
-          this.currentPipes[i].scored = true;
-          this.emit("point");
-        }
-      }
+    if (this.bird.bottomY > this.ground.surfaceY) {
+      const birdBounds = this.bird.getBounds();
+      const birdBeakPixelSize = birdBounds.height / 10;
 
-      // Pipes come in pairs of 2 (top, bottom).
-      this.currentPipes[i].onUpdate(delta);
-      this.currentPipes[i + 1].onUpdate(delta);
+      this.bird.y =
+        this.ground.surfaceY - birdBounds.height / 2 + birdBeakPixelSize;
+
+      // The bird collided with the ground.
+      this.endGame(false);
     }
 
-    if (this.offscreenPipes >= 2) {
-      // The first two pipes (top and bottom) are the last ones that went offscreen.
-      this.currentPipes = this.currentPipes.slice(this.offscreenPipes);
-      this.offscreenPipes = 0;
-    } */
+    this.bird.onUpdate(delta);
   }
 
   /**
    * Handles the fixed update logic for the level.
-   * @param fixedDeltaTime - The fixed delta time for the update.
+   * @param fixedDeltaTime - The fixed time step, in seconds.
    */
-  public onFixedUpdate(_fixedDeltaTime: number) {
+  public onFixedUpdate(fixedDeltaTime: number) {
+    this.bird.onFixedUpdate(fixedDeltaTime);
+  }
+
+  /**
+   * Resizes the level. Runs when the game area is resized.
+   *
+   * @param newCanvasWidth The new width of the game area.
+   * @param newCanvasHeight The new height of the game area.
+   */
+  public onResize(newCanvasWidth: number, newCanvasHeight: number) {
+    this.bird.onResize(newCanvasWidth, newCanvasHeight);
+  }
+
+  /**
+   * Ends the game and triggers the "gameover" event.
+   * @param deathByPipe - A boolean indicating whether the bird died by hitting a pipe.
+   */
+  private endGame(deathByPipe: boolean) {
     if (this.gameOver) {
       return;
     }
 
-    /* for (const pipe of this.currentPipes) {
-      if (pipe.collidesWithBird(this.bird)) {
-        this.bird.die();
+    this.ground.stop();
+    this.bird.die();
 
-        this.gameOver = true;
-        this.emit("gameover");
-      }
-    } */
+    this.gameOver = true;
+    this.emit("gameover", deathByPipe);
   }
 }

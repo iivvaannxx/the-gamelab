@@ -1,12 +1,15 @@
 import { AnimatedSprite, Circle } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
-import * as Keyboard from "@gamelab/input-system/keyboard";
+import { getResponsiveScale } from "@app/utils/screen";
 
-const REFERENCE_HEIGHT = 240;
+import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Defines the logic for the Bird (player). */
 export class Bird extends AnimatedSprite {
+  /** The velocity at which the bird tilts. */
+  private static readonly ANGULAR_VELOCITY = 8;
+
   /** The bird's vertical velocity. */
   private yVelocity = 0;
 
@@ -17,11 +20,15 @@ export class Bird extends AnimatedSprite {
   private collisionShape = new Circle();
 
   /** The collision bounds of the bird. */
-  public get collisionBounds() {
+  public get collider() {
     return this.collisionShape;
   }
 
-  /** Constructs a new entity of the Bird (player). */
+  /** The lowest Y coordinate of the bird. */
+  public get bottomY() {
+    return this.y + this.getBounds().height / 2;
+  }
+
   constructor() {
     const animationTextures = Resources.spritesheet.animations.bird;
     super(animationTextures);
@@ -30,16 +37,26 @@ export class Bird extends AnimatedSprite {
     this.play();
   }
 
-  /** Updates the bird entity. Runs on every frame update. */
-  public onUpdate() {
+  /**
+   * Updates the bird entity. Runs on every frame update.
+   * @param delta The time in seconds since the last frame.
+   */
+  public onUpdate(delta: number) {
+    if (this.yVelocity > 0 || this.dead) {
+      // Point down when falling.
+      this.rotation += delta * Bird.ANGULAR_VELOCITY;
+      this.rotation = Math.min(Math.PI / 2, this.rotation);
+    }
+
     if (Keyboard.spaceKey.wasPressedThisFrame) {
       this.jump();
     }
-
-    this.updateCollisionShape();
   }
 
-  /** Updates the bird's physics. Should run on every fixed update. */
+  /**
+   * Updates the bird's physics. Should run on every fixed update.
+   * @param fixedDeltaTime The fixed time step.
+   */
   public onFixedUpdate(fixedDeltaTime: number) {
     this.yVelocity += 4000 * fixedDeltaTime;
     this.y += this.yVelocity * fixedDeltaTime;
@@ -50,40 +67,56 @@ export class Bird extends AnimatedSprite {
     }
   }
 
+  /**
+   * Resizes the bird entity. Runs when the game area is resized.
+   *
+   * @param newCanvasWidth The new width of the game area.
+   * @param newCanvasHeight The new height of the game area.
+   */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.x = newCanvasWidth / 3;
     this.y = newCanvasHeight / 2;
 
-    this.scale.set(
-      Math.min(newCanvasHeight, newCanvasWidth) / REFERENCE_HEIGHT,
-    );
+    this.updateCollisionShape();
+
+    const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
+    this.scale.set(scale);
   }
 
-  /** Makes the bird stop falling and do a little jump.  */
-  public jump() {
-    if (!this.dead) {
-      this.yVelocity = -1500;
-      Resources.wingSound.play();
-    }
-  }
-
+  /** Sets the bird state to be dead. */
   public die() {
     this.dead = true;
+
+    // Stop the animated sprite.
+    this.stop();
     Resources.hitSound.play();
   }
 
+  /** Makes the bird stop falling and do a little jump.  */
+  private jump() {
+    if (this.dead) {
+      return;
+    }
+
+    // Tilt the bird up to -20 degrees.
+    this.rotation = -20 * (Math.PI / 180);
+    this.yVelocity = -1500;
+
+    Resources.wingSound.play();
+  }
+
   /** Updates the collision shape of the bird entity based on the current bounds. */
-  public updateCollisionShape() {
+  private updateCollisionShape() {
     // The collision shape is a circle around the bird.
     // We need to calculate it based on the bounds (which are squared).
     const bounds = this.getBounds();
 
-    // We derive a radius from the width of the bounds (could also be done from the height, they are equal).
+    // We derive a radius from the width of the bounds.
     // The division by 4 is just an arbitrary value, because fits the bird's shape.
-    // We want the center to be a bit to the right (so we divide by a smaller value).
-    // This is because a the bird is not a perfect circle, but a bit more elongated.
-    const radius = bounds.width / 4;
-    const centerX = bounds.x + bounds.width / 1.9;
+    // We want the center to be a bit to the right,
+    // This is because a the bird is not a perfect circle, but a bit more elongated (ellipse).
+    const radius = bounds.width / 2.9;
+    const centerX = bounds.x + bounds.width / 2 + 10;
     const centerY = bounds.y + bounds.height / 2;
 
     this.collisionShape.radius = radius;

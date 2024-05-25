@@ -12,7 +12,7 @@ type Events = {
   resize: (width: number, height: number) => void;
 };
 
-/** Helper abstraction of the general application loop. */
+/** Helper abstraction of the general game loop. */
 export class EventLoop extends EventEmitter<Events> {
   /** The rate at which we run our fixed-step loop (60 times a second). */
   private static readonly FIXED_UPDATE_RATE = 1 / 60;

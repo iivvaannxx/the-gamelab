@@ -43,18 +43,19 @@ async function start(app: Application) {
   const { getMenuScene } = await import("./scenes/menu");
   const { getGameScene } = await import("./scenes/game");
 
+  // The ground is always on screen. We can create it here.
+  const ground = new Ground(50);
   const menuScene = getMenuScene();
-  const gameScene = getGameScene({ app });
-  gameScene.visible = false;
+  const gameScene = getGameScene(ground);
+
+  app.stage.addChild(ground, menuScene, gameScene);
+  menuScene.visible = false;
+  gameScene.visible = true;
 
   menuScene.on("game", () => {
     menuScene.visible = false;
     gameScene.visible = true;
   });
-
-  // The ground is always on screen. We can create it here.
-  const ground = new Ground(50);
-  app.stage.addChild(ground, menuScene, gameScene);
 
   const eventLoop = new EventLoop(app);
   eventLoop.on("update", (delta) => {

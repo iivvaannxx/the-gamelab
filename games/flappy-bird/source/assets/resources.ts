@@ -9,7 +9,7 @@ export class Resources {
   /** The spritesheet with all our game textures. */
   public static spritesheet: GameSpritesheet;
 
-  public static dieSound: Sound;
+  public static fallSound: Sound;
   public static hitSound: Sound;
   public static pointSound: Sound;
   public static swooshSound: Sound;
@@ -40,8 +40,8 @@ export class Resources {
       loop: false,
     });
 
-    Resources.dieSound = Sound.from({
-      url: "/assets/sounds/die.ogg",
+    Resources.fallSound = Sound.from({
+      url: "/assets/sounds/fall.ogg",
       preload: false,
 
       autoPlay: false,
