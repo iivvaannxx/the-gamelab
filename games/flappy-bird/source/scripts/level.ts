@@ -125,6 +125,7 @@ export class Level extends Container {
       bottom.onUpdate(delta);
 
       // We only do checks using one pipe, as they always come as pairs.
+      // Otherwise things would happen twice, once for each pipe.
       if (top.x < this.bird.x && !top.scored) {
         top.scored = true;
 
