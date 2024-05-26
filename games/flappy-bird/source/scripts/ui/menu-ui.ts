@@ -27,7 +27,12 @@ export class MenuUI extends Container {
     this.zIndex = 10;
   }
 
-  /** Event fired when the game screen gets resized. */
+  /**
+   * Resizes the menu UI. Runs when the game area is resized.
+   *
+   * @param newCanvasWidth The new width of the game area.
+   * @param newCanvasHeight The new height of the game area.
+   */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.logo.onGameResize(newCanvasWidth, newCanvasHeight);
     this.startButton.onGameResize(newCanvasWidth, newCanvasHeight);
@@ -46,10 +51,6 @@ export class MenuUI extends Container {
    * @param enable Whether to enable or disable the interaction.
    */
   public toggleInteraction(enable: boolean) {
-    if (!enable) {
-      document.body.style.cursor = "default";
-    }
-
     this.startButton.element.interactive = enable;
     this.scoreButton.element.interactive = enable;
   }

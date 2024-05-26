@@ -28,6 +28,8 @@ export class GameScene extends Container {
     this.state = GameState.PENDING_START;
 
     this.ui = new GameUI();
+    this.ui.setScore(0);
+
     this.scoreController = new ScoreController();
 
     this.level = new Level(ground);
@@ -71,6 +73,7 @@ export class GameScene extends Container {
    * @param newCanvasHeight The new height of the game area.
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
+    this.ui.onResize(newCanvasWidth, newCanvasHeight);
     this.level.onResize(newCanvasWidth, newCanvasHeight);
   }
 
@@ -83,6 +86,8 @@ export class GameScene extends Container {
   /** Event fired when the player scores a point. */
   private onPoint() {
     this.scoreController.increaseScore();
+    this.ui.setScore(this.scoreController.currentScore);
+
     Resources.pointSound.play();
   }
 

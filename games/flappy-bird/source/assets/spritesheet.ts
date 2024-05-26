@@ -199,9 +199,9 @@ const data = {
     num1: {
       anchor: { x: 0.5, y: 0.5 },
       frame: {
-        x: 291,
+        x: 289,
         y: 118,
-        w: 5,
+        w: 7,
         h: 10,
       },
 
@@ -210,11 +210,11 @@ const data = {
       spriteSourceSize: {
         x: 0,
         y: 0,
-        w: 5,
+        w: 7,
         h: 10,
       },
       sourceSize: {
-        w: 5,
+        w: 7,
         h: 10,
       },
     },

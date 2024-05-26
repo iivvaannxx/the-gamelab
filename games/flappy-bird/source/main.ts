@@ -50,8 +50,8 @@ async function start(app: Application) {
   const gameScene = new GameScene(ground);
 
   app.stage.addChild(menuScene, gameScene, ground);
-  menuScene.visible = false;
-  gameScene.visible = true;
+  menuScene.visible = true;
+  gameScene.visible = false;
 
   menuScene.on("game", () => {
     menuScene.visible = false;

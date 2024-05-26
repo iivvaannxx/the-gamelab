@@ -9,6 +9,8 @@ export class Resources {
   /** The spritesheet with all our game textures. */
   public static spritesheet: GameSpritesheet;
 
+  public static numbersTextures: Texture[] = [];
+
   public static fallSound: Sound;
   public static hitSound: Sound;
   public static pointSound: Sound;
@@ -23,7 +25,21 @@ export class Resources {
     await Assets.init({ manifest });
     Assets.backgroundLoadBundle("game");
 
-    Resources.spritesheet = await getSpritesheet();
+    const spritesheet = await getSpritesheet();
+
+    Resources.spritesheet = spritesheet;
+    Resources.numbersTextures = [
+      spritesheet.textures.num0,
+      spritesheet.textures.num1,
+      spritesheet.textures.num2,
+      spritesheet.textures.num3,
+      spritesheet.textures.num4,
+      spritesheet.textures.num5,
+      spritesheet.textures.num6,
+      spritesheet.textures.num7,
+      spritesheet.textures.num8,
+      spritesheet.textures.num9,
+    ];
 
     for (const tex of Object.values(
       Resources.spritesheet.textures,
