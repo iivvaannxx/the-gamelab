@@ -18,6 +18,9 @@ export class Pipe extends Sprite {
   private colliderShape: Rectangle;
   private direction: PipeDirection;
 
+  /** Whether the player has scored a point by passing this pipe. */
+  public scored = false;
+
   /** Defines the collider of the pipe entity. */
   public get collider() {
     return this.colliderShape;

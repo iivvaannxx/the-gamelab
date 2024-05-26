@@ -119,13 +119,26 @@ export class Level extends Container {
       this.spawnPipes();
     }
 
-    for (const pipe of this.pipes) {
-      pipe.onUpdate(delta);
+    for (let i = 0; i < this.pipes.length - 1; i += 2) {
+      const [top, bottom] = [this.pipes[i], this.pipes[i + 1]];
+      top.onUpdate(delta);
+      bottom.onUpdate(delta);
 
-      if (pipe.x < -200) {
-        this.offscreenPipes++;
-        pipe.destroy();
-        pipe.removeFromParent();
+      // We only do checks using one pipe, as they always come as pairs.
+      if (top.x < this.bird.x && !top.scored) {
+        top.scored = true;
+
+        Resources.pointSound.play();
+        this.emit("point");
+      }
+
+      // But after they go offscreen, we need to remove them both.
+      if (top.x < -200) {
+        this.offscreenPipes += 2;
+        this.removeChild(top, bottom);
+
+        top.destroy();
+        bottom.destroy();
       }
     }
 
