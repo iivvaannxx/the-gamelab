@@ -12,11 +12,10 @@ type Events = {
 /** Defines a simple sprite which is intended to be used as a button. */
 export class SpriteButton extends Sprite {
   constructor(texture: Texture, { onPointerDown, onPointerUp }: Events) {
-    super({ texture, eventMode: "static" });
+    super({ texture, eventMode: "static", cursor: "pointer" });
     let onBeforeHoverScale: ObservablePoint;
 
     this.on("mouseover", () => {
-      document.body.style.cursor = "pointer";
       onBeforeHoverScale = this.scale.clone();
 
       this.scale.x *= 1.05;
@@ -24,7 +23,6 @@ export class SpriteButton extends Sprite {
     });
 
     this.on("mouseout", () => {
-      document.body.style.cursor = "default";
       this.scale = onBeforeHoverScale;
     });
 

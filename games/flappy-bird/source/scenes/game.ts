@@ -1,12 +1,12 @@
 import { Container } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
-import { LevelController } from "@app/scripts/controllers/level";
 import { ScoreController } from "@app/scripts/controllers/score";
+import { Level } from "@app/scripts/level";
 
-import type { Ground } from "@app/scripts/entities/ground";
 import { GameUI } from "@app/scripts/ui/game-ui";
 
+import type { Ground } from "@app/scripts/entities/ground";
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Defines all the possible states of the game. */
@@ -17,25 +17,25 @@ enum GameState {
 }
 
 /** Defines all the logic of the game. */
-class GameScene extends Container {
-  private levelController: LevelController;
+export class GameScene extends Container {
+  private level: Level;
   private scoreController: ScoreController;
   private ui: GameUI;
   private state: GameState;
 
   constructor(ground: Ground) {
-    super();
+    super({ isRenderGroup: true, zIndex: 1 });
     this.state = GameState.PENDING_START;
 
     this.ui = new GameUI();
     this.scoreController = new ScoreController();
 
-    this.levelController = new LevelController(ground);
-    this.levelController.on("point", this.onPoint.bind(this));
-    this.levelController.on("gameover", this.onGameOver.bind(this));
+    this.level = new Level(ground);
+    this.level.on("point", this.onPoint.bind(this));
+    this.level.on("gameover", this.onGameOver.bind(this));
 
     this.addChild(this.ui);
-    this.addChild(this.levelController);
+    this.addChild(this.level);
   }
 
   /**
@@ -49,7 +49,7 @@ class GameScene extends Container {
       return;
     }
 
-    this.levelController.onUpdate(delta);
+    this.level.onUpdate(delta);
   }
 
   /**
@@ -61,7 +61,7 @@ class GameScene extends Container {
       return;
     }
 
-    this.levelController.onFixedUpdate(fixedDeltaTime);
+    this.level.onFixedUpdate(fixedDeltaTime);
   }
 
   /**
@@ -71,7 +71,7 @@ class GameScene extends Container {
    * @param newCanvasHeight The new height of the game area.
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
-    this.levelController.onResize(newCanvasWidth, newCanvasHeight);
+    this.level.onResize(newCanvasWidth, newCanvasHeight);
   }
 
   /** Event fired when the player dies. */
@@ -88,32 +88,8 @@ class GameScene extends Container {
 
   /** Waits for user input before starting the game. */
   private waitForInput() {
-    if (
-      Keyboard.spaceKey.wasPressedThisFrame &&
-      this.state === GameState.PENDING_START
-    ) {
+    if (Keyboard.spaceKey.wasPressedThisFrame) {
       this.state = GameState.PLAYING;
     }
   }
 }
-
-/** The unique instance of our game scene. */
-let gameScene: GameScene;
-
-/**
- * Creates a new game scene. If one already exists, it will return the existing one.
- *
- * @param ground The instance of the ground entity.
- * @returns The current or newly created game scene.
- */
-export function getGameScene(ground: Ground) {
-  if (gameScene) {
-    console.warn("Game scene already initialized.");
-    return gameScene;
-  }
-
-  gameScene = new GameScene(ground);
-  return gameScene;
-}
-
-export type { GameScene };

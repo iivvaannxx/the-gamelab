@@ -1,11 +1,11 @@
-import { Container } from "pixi.js";
+import { Application, Container } from "pixi.js";
 import { Overlay } from "./overlay";
 
 /** Defines the logic for the UI of the game (buttons, score...) */
 export class GameUI extends Container {
   constructor() {
     super();
-    this.zIndex = 10000;
+    this.zIndex = 10;
   }
 
   /**
@@ -14,12 +14,14 @@ export class GameUI extends Container {
    */
   public whiteFlash(duration = 0.3) {
     const overlay = new Overlay({ color: "white" });
-    this.addChild(overlay);
+
+    // We add it to the app stage to ensure it displays always on top of everything.
+    Application.instance.stage.addChild(overlay);
 
     // The overlay starts already in, then fades out.
     overlay.alpha = 1;
     overlay.fadeOut(duration, () => {
-      this.removeChild(overlay);
+      Application.instance.stage.removeChild(overlay);
       overlay.destroy();
     });
   }

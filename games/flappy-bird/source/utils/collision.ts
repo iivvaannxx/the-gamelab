@@ -1,42 +1,74 @@
-import type { Circle, Rectangle } from "pixi.js";
+import type { Ellipse, Rectangle } from "pixi.js";
 
 /**
- * Checks if a rectangle intersects a circle.
+ * Checks if a point is inside a rotated ellipse.
  *
- * @param rectangle The rectangle to check.
- * @param circle The circle to check.
- * @returns True if the rectangle intersects the circle, false otherwise.
+ * @param px - The x-coordinate of the point.
+ * @param py - The y-coordinate of the point.
+ * @param cx - The x-coordinate of the center of the ellipse.
+ * @param cy - The y-coordinate of the center of the ellipse.
+ * @param rx - The radius of the ellipse along the x-axis.
+ * @param ry - The radius of the ellipse along the y-axis.
+ * @param angle - The rotation angle of the ellipse in degrees.
+ *
+ * @returns A boolean indicating whether the point is inside the rotated ellipse.
  */
-export function rectangleIntersectsCircle(
-  rectangle: Rectangle,
-  circle: Circle,
+function pointInRotatedEllipse(
+  px: number,
+  py: number,
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+  angle: number,
 ) {
+  const radians = -angle * (Math.PI / 180);
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+
+  // Translate point to ellipse's local coordinates
+  const localX = cos * (px - cx) - sin * (py - cy) + cx;
+  const localY = sin * (px - cx) + cos * (py - cy) + cy;
+
+  // This is based on the ellipse equation:
+  // For all points (x, y) in an ellipse centered at (cx, cy) with radii `rx` and `ry`:
+  // ((x - cx) / rx)^2 + ((y - cy) / ry)^2 <= 1
+  const dx = (localX - cx) / rx;
+  const dy = (localY - cy) / ry;
+  return dx * dx + dy * dy <= 1;
+}
+
+/**
+ * Checks for collision between an ellipse and a rectangle with rotation.
+ *
+ * @param ellipse - An object defining the ellipse.
+ * @param rect - An object defining the rectangle.
+ * @param angle - The rotation angle in degrees.
+ * @returns True if there is a collision, false otherwise.
+ */
+export function ellipseRectCollisionWithRotation(
+  ellipse: Ellipse,
+  rect: Rectangle,
+  angle: number,
+) {
+  // Calculate the closest point of the rectangle to the ellipse center.
+  const { x, y, halfWidth, halfHeight } = ellipse;
+  const closestX = Math.max(rect.x, Math.min(rect.x + rect.width, x));
+  const closestY = Math.max(rect.y, Math.min(rect.y + rect.height, y));
+
   if (
-    circle.x + circle.radius < rectangle.x ||
-    circle.x - circle.radius > rectangle.x + rectangle.width ||
-    circle.y + circle.radius < rectangle.y ||
-    circle.y - circle.radius > rectangle.y + rectangle.height
+    pointInRotatedEllipse(
+      closestX,
+      closestY,
+      x,
+      y,
+      halfWidth,
+      halfHeight,
+      angle,
+    )
   ) {
-    // There's no intersection possible, early return.
-    return false;
+    return true;
   }
 
-  // The x position of the closest rectangle corner to the circle's center.
-  const closestX = Math.max(
-    rectangle.x,
-    Math.min(circle.x, rectangle.x + rectangle.width),
-  );
-
-  // The y position of the closest rectangle corner to the circle's center.
-  const closestY = Math.max(
-    rectangle.y,
-    Math.min(circle.y, rectangle.y + rectangle.height),
-  );
-
-  const distanceX = circle.x - closestX;
-  const distanceY = circle.y - closestY;
-  const distanceSquared = distanceX ** 2 + distanceY ** 2;
-
-  // We compare the squared distance as it's faster to compute than the square root.
-  return distanceSquared < circle.radius ** 2;
+  return false;
 }

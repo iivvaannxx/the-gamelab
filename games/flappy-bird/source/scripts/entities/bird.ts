@@ -1,28 +1,28 @@
-import { AnimatedSprite, Circle } from "pixi.js";
+import { AnimatedSprite, Application, Ellipse, Point } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
-import { getGameAreaSize, getResponsiveScale } from "@app/utils/screen";
+import { getResponsiveScale } from "@app/utils/screen";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Defines the logic for the Bird (player). */
 export class Bird extends AnimatedSprite {
   /** The velocity at which the bird tilts. */
-  private static readonly ANGULAR_VELOCITY = 8;
+  private static readonly ANGULAR_VELOCITY = 6;
 
-  private collisionShape = new Circle();
   private dead = false;
   private screenRelativeY = 0;
   private yVelocity = 0;
 
-  /** The collision bounds of the bird. */
-  public get collider() {
-    return this.collisionShape;
-  }
+  private colliderShape: Ellipse;
 
   /** The lowest Y coordinate of the bird. */
   public get bottomY() {
     return this.y + this.getBounds().height / 2;
+  }
+
+  public get collider() {
+    return this.colliderShape;
   }
 
   constructor() {
@@ -34,6 +34,8 @@ export class Bird extends AnimatedSprite {
 
     // The bird starts at the middle of the screen.
     this.screenRelativeY = 0.5;
+    this.colliderShape = new Ellipse();
+    this.zIndex = 1;
   }
 
   /**
@@ -51,8 +53,11 @@ export class Bird extends AnimatedSprite {
       this.jump();
     }
 
-    const { height } = getGameAreaSize();
+    const { height } = Application.instance.screen;
     this.screenRelativeY = this.y / height;
+
+    // As we only move on Y, we only need to update the Y coordinate.
+    this.colliderShape.y = this.y;
   }
 
   /**
@@ -82,7 +87,11 @@ export class Bird extends AnimatedSprite {
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
     this.scale.set(scale);
 
-    this.updateCollisionShape();
+    const colliderPadding = 0.9;
+    this.colliderShape.x = this.x;
+    this.colliderShape.y = this.y;
+    this.colliderShape.halfWidth = (this.width * colliderPadding) / 2;
+    this.colliderShape.halfHeight = (this.height * colliderPadding) / 2;
   }
 
   /** Sets the bird state to be dead. */
@@ -105,24 +114,5 @@ export class Bird extends AnimatedSprite {
     this.yVelocity = -1500;
 
     Resources.wingSound.play();
-  }
-
-  /** Updates the collision shape of the bird entity based on the current bounds. */
-  private updateCollisionShape() {
-    // The collision shape is a circle around the bird.
-    // We need to calculate it based on the bounds (which are squared).
-    const bounds = this.getBounds();
-
-    // We derive a radius from the width of the bounds.
-    // The division by 4 is just an arbitrary value, because fits the bird's shape.
-    // We want the center to be a bit to the right,
-    // This is because a the bird is not a perfect circle, but a bit more elongated (ellipse).
-    const radius = bounds.width / 2.9;
-    const centerX = bounds.x + bounds.width / 2 + 10;
-    const centerY = bounds.y + bounds.height / 2;
-
-    this.collisionShape.radius = radius;
-    this.collisionShape.x = centerX;
-    this.collisionShape.y = centerY;
   }
 }

@@ -1,22 +1,27 @@
 import { Resources } from "@app/assets/resources";
 import { getResponsiveScale } from "@app/utils/screen";
-import { TilingSprite } from "pixi.js";
+import { Application, TilingSprite } from "pixi.js";
 
 /** Defines the logic for the ground entity.  */
 export class Ground extends TilingSprite {
-  private speed: number;
+  private stop = false;
 
   /** The Y coordinate of the ground surface. */
   public get surfaceY() {
-    return this.y - this.getBounds().height;
+    return this.y - this.getBounds(true).height;
   }
 
-  constructor(speed: number) {
-    super(Resources.spritesheet.textures.ground);
+  constructor() {
+    super({
+      texture: Resources.spritesheet.textures.ground,
+      eventMode: "none",
+      interactiveChildren: false,
+      zIndex: 1,
+    });
 
+    // Double the width of the ground to make it "infinite".
+    this.width = this.texture.width * 2;
     this.anchor.y = 1;
-    this.speed = speed;
-    this.zIndex = 10;
   }
 
   /**
@@ -24,7 +29,18 @@ export class Ground extends TilingSprite {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
-    this.tilePosition.x -= this.speed * delta;
+    if (this.stop) {
+      return;
+    }
+
+    const { width } = Application.instance.screen;
+    this.x -= (width / 3) * delta;
+
+    // Half of the ground is offscreen.
+    // Move it back to the right to create an "infinite" ground.
+    if (this.x < -this.getBounds(true).width / 2) {
+      this.x += this.getBounds(true).width / 2;
+    }
   }
 
   /**
@@ -37,11 +53,14 @@ export class Ground extends TilingSprite {
     this.y = newCanvasHeight;
 
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
-    this.scale.set(scale);
+    this.scale.set(scale * 1.05);
   }
 
-  /** Stops the ground from moving. */
-  public stop() {
-    this.speed = 0;
+  /**
+   * Toggles the stop state of the ground entity.
+   * @param stop - A boolean value indicating whether to stop or resume the ground entity.
+   */
+  public toggleStop(stop: boolean) {
+    this.stop = stop;
   }
 }

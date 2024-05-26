@@ -5,11 +5,11 @@ import { MenuUI } from "@app/scripts/ui/menu-ui";
 import { Overlay } from "@app/scripts/ui/overlay";
 
 /** Defines all the logic of the menu. */
-class MenuScene extends Container {
+export class MenuScene extends Container {
   private ui: MenuUI;
 
   constructor() {
-    super();
+    super({ isRenderGroup: true });
 
     this.ui = new MenuUI();
     this.addChild(this.ui);
@@ -55,22 +55,3 @@ class MenuScene extends Container {
     });
   }
 }
-
-/** The unique instance of our game scene. */
-let menuScene: MenuScene;
-
-/**
- * Creates a new menu scene. If one already exists, it will return the existing one.
- * @returns The current or newly created menu scene.
- */
-export function getMenuScene() {
-  if (menuScene) {
-    console.warn("Menu scene already initialized.");
-    return menuScene;
-  }
-
-  menuScene = new MenuScene();
-  return menuScene;
-}
-
-export type { MenuScene };

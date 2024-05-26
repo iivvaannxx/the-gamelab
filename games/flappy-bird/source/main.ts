@@ -31,6 +31,7 @@ async function init() {
   await Resources.init();
   Keyboard.init();
 
+  globalThis.__PIXI_APP__ = app;
   Object.assign(Application, { instance: app });
   return app;
 }
@@ -40,15 +41,15 @@ async function init() {
  * @param app - The application instance.
  */
 async function start(app: Application) {
-  const { getMenuScene } = await import("./scenes/menu");
-  const { getGameScene } = await import("./scenes/game");
+  const { MenuScene } = await import("./scenes/menu");
+  const { GameScene } = await import("./scenes/game");
 
   // The ground is always on screen. We can create it here.
-  const ground = new Ground(50);
-  const menuScene = getMenuScene();
-  const gameScene = getGameScene(ground);
+  const ground = new Ground();
+  const menuScene = new MenuScene();
+  const gameScene = new GameScene(ground);
 
-  app.stage.addChild(ground, menuScene, gameScene);
+  app.stage.addChild(menuScene, gameScene, ground);
   menuScene.visible = false;
   gameScene.visible = true;
 

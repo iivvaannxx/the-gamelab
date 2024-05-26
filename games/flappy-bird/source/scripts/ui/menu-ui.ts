@@ -24,7 +24,7 @@ export class MenuUI extends Container {
     this.scoreButton = this.setupScoreButton();
 
     // Ensure the UI is always on top.
-    this.zIndex = 100;
+    this.zIndex = 10;
   }
 
   /** Event fired when the game screen gets resized. */
@@ -65,8 +65,11 @@ export class MenuUI extends Container {
     bird.x += 52;
     bird.y -= 1;
 
-    const container = new Container({ children: [logo, bird] });
-    this.addChild(container);
+    const container = new Container({
+      children: [logo, bird],
+      eventMode: "none",
+      interactiveChildren: false,
+    });
 
     const { height } = getGameAreaSize();
     const tween = gsap.to(container, {
@@ -79,6 +82,7 @@ export class MenuUI extends Container {
       yoyo: true,
     });
 
+    this.addChild(container);
     return {
       element: container,
       onGameResize(newCanvasWidth: number, newCanvasHeight: number) {
@@ -94,9 +98,13 @@ export class MenuUI extends Container {
 
   /** Creates and sets up the copyright notice in the UI. */
   private setupCopyrightNotice() {
-    const copyright = new Sprite(Resources.spritesheet.textures.gearsNotice);
-    this.addChild(copyright);
+    const copyright = new Sprite({
+      texture: Resources.spritesheet.textures.gearsNotice,
+      eventMode: "none",
+      interactiveChildren: false,
+    });
 
+    this.addChild(copyright);
     return {
       element: copyright,
       onGameResize(newCanvasWidth: number, newCanvasHeight: number) {
