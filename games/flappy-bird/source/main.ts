@@ -20,6 +20,11 @@ async function init() {
   const container = document.querySelector("#app") as HTMLElement;
   const loader = document.querySelector(".loader") as HTMLElement;
 
+  // For some reason the loader comes with a weird pre-defined padding.
+  loader.shadowRoot
+    ?.querySelector(".container")
+    ?.setAttribute("style", "padding-bottom: 0;");
+
   // Initialize the Pixi.js application.
   const app = new Application();
   await app.init({

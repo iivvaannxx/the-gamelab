@@ -30,6 +30,7 @@ export class GameScene extends Container {
   private state: GameState;
   private statePreviousToPause: GameState;
   private shareWindow: Window | null;
+  private pauseNeedsUpdate = false;
 
   constructor() {
     super({ isRenderGroup: true, zIndex: 1 });
@@ -45,9 +46,12 @@ export class GameScene extends Container {
 
     this.ui = new GameUI();
     this.ui.setScore(0);
-    this.ui.on("togglepause", this.togglePause.bind(this));
+
     this.ui.on("ok", this.returnToMenu.bind(this));
     this.ui.on("share", this.shareScore.bind(this));
+    this.ui.on("togglepause", () => {
+      this.pauseNeedsUpdate = true;
+    });
 
     this.addChild(this.ui, this.level, this.ground);
   }
@@ -55,6 +59,13 @@ export class GameScene extends Container {
   public onUpdate(delta: number) {
     if (Keyboard.escapeKey.wasPressedThisFrame) {
       this.togglePause();
+    }
+
+    if (this.pauseNeedsUpdate) {
+      this.togglePause();
+      this.pauseNeedsUpdate = false;
+
+      return;
     }
 
     // Paused stops any further updates.

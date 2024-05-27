@@ -102,6 +102,10 @@ export class Level extends Container {
     }
   }
 
+  /**
+   * Reacts to the game being paused or resumed.
+   * @param paused - A boolean indicating whether the game is paused or resumed.
+   */
   public onPause(paused: boolean) {
     if (paused) {
       this.bird.stop();
