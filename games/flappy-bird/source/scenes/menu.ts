@@ -4,15 +4,19 @@ import { Resources } from "@app/assets/resources";
 import { MenuUI } from "@app/scripts/ui/menu-ui";
 import { Overlay } from "@app/scripts/ui/overlay";
 
+import { Ground } from "@app/scripts/entities/ground";
+
 /** Defines all the logic of the menu. */
 export class MenuScene extends Container {
   private ui: MenuUI;
+  private ground: Ground;
 
   constructor() {
     super({ isRenderGroup: true });
 
     this.ui = new MenuUI();
-    this.addChild(this.ui);
+    this.ground = new Ground();
+    this.addChild(this.ui, this.ground);
 
     // When the start button is clicked:
     this.ui.on("start", () => {
@@ -24,6 +28,10 @@ export class MenuScene extends Container {
     });
   }
 
+  public onUpdate(delta: number) {
+    this.ground.onUpdate(delta);
+  }
+
   /**
    * Event invoked when the game area is resized.
    *
@@ -31,7 +39,12 @@ export class MenuScene extends Container {
    * @param newCanvasHeight - The new height of the canvas.
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
+    this.ground.onResize(newCanvasWidth, newCanvasHeight);
     this.ui.onResize(newCanvasWidth, newCanvasHeight);
+  }
+
+  public reset() {
+    this.ui.reset();
   }
 
   /**

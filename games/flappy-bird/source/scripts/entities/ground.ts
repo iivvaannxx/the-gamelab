@@ -33,7 +33,6 @@ export class Ground extends TilingSprite {
       return;
     }
 
-    console.log(this.x);
     const { width } = Application.instance.screen;
     this.x -= (width / 3) * delta;
 

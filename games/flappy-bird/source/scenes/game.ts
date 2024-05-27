@@ -1,11 +1,12 @@
-import { Container } from "pixi.js";
+import { Application, Container } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
 import { Level } from "@app/scripts/level";
 import { Score } from "@app/scripts/score";
 import { GameUI } from "@app/scripts/ui/game-ui";
 
-import type { Ground } from "@app/scripts/entities/ground";
+import { Ground } from "@app/scripts/entities/ground";
+import { Overlay } from "@app/scripts/ui/overlay";
 import * as Keyboard from "@gamelab/input-system/keyboard";
 
 /** Defines all the possible states of the game. */
@@ -27,15 +28,15 @@ export class GameScene extends Container {
   private statePreviousToPause: GameState;
   private shareWindow: Window | null;
 
-  constructor(ground: Ground) {
+  constructor() {
     super({ isRenderGroup: true, zIndex: 1 });
 
     this.state = this.statePreviousToPause = GameState.PENDING_START;
     this.score = new Score();
     this.shareWindow = null;
-    this.ground = ground;
+    this.ground = new Ground();
 
-    this.level = new Level(ground);
+    this.level = new Level(this.ground);
     this.level.on("point", this.onPoint.bind(this));
     this.level.on("gameover", this.onGameOver.bind(this));
 
@@ -45,7 +46,7 @@ export class GameScene extends Container {
     this.ui.on("ok", this.returnToMenu.bind(this));
     this.ui.on("share", this.shareScore.bind(this));
 
-    this.addChild(this.ui, this.level, ground);
+    this.addChild(this.ui, this.level, this.ground);
   }
 
   /**
@@ -61,6 +62,9 @@ export class GameScene extends Container {
     if (this.state === GameState.PAUSED) {
       return;
     }
+
+    // The ground moves even before the game starts.
+    this.ground.onUpdate(delta);
 
     if (
       this.state === GameState.PENDING_START &&
@@ -101,6 +105,7 @@ export class GameScene extends Container {
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.ui.onResize(newCanvasWidth, newCanvasHeight);
+    this.ground.onResize(newCanvasWidth, newCanvasHeight);
     this.level.onResize(newCanvasWidth, newCanvasHeight);
   }
 
@@ -131,7 +136,21 @@ export class GameScene extends Container {
     );
   }
 
-  private returnToMenu() {}
+  /** Returns to the main menu. */
+  private returnToMenu() {
+    const overlay = new Overlay({ color: "black" });
+
+    Resources.swooshSound.play();
+    Application.instance.stage.addChild(overlay);
+
+    overlay.fadeIn(0.5, () => {
+      this.emit("menu");
+      overlay.fadeOut(0.5, () => {
+        overlay.destroy();
+        overlay.removeFromParent();
+      });
+    });
+  }
 
   /** Starts a Tweet intent to share the current score. */
   private shareScore() {

@@ -1,18 +1,18 @@
 import { Application, EventEmitter } from "pixi.js";
 
-type Events = {
+export interface LoopEvents {
   /** The update event is fired every frame. */
-  update: (deltaTime: number) => void;
+  onUpdate: (deltaTime: number) => void;
 
   /** The fixed update event is fired every fixed time step. */
-  fixedUpdate: (fixedDeltaTime: number) => void;
+  onFixedUpdate: (fixedDeltaTime: number) => void;
 
   /** The resize event is fired when the game area is resized. */
-  resize: (width: number, height: number) => void;
-};
+  onResize: (width: number, height: number) => void;
+}
 
 /** Helper abstraction of the general game loop. */
-export class EventLoop extends EventEmitter<Events> {
+export class EventLoop extends EventEmitter<LoopEvents> {
   /** The rate at which we run our fixed-step loop (60 times a second). */
   private static readonly FIXED_UPDATE_RATE = 1 / 60;
 
@@ -57,15 +57,15 @@ export class EventLoop extends EventEmitter<Events> {
       this.lastWidth = width;
       this.lastHeight = height;
 
-      this.emit("resize", width, height);
+      this.emit("onResize", width, height);
     }
 
     // See: https://docs.unity3d.com/uploads/Main/time-flowchart.png
     while (this.totalTime - this.fixedTime >= EventLoop.FIXED_UPDATE_RATE) {
       this.fixedTime += EventLoop.FIXED_UPDATE_RATE;
-      this.emit("fixedUpdate", EventLoop.FIXED_UPDATE_RATE);
+      this.emit("onFixedUpdate", EventLoop.FIXED_UPDATE_RATE);
     }
 
-    this.emit("update", delta);
+    this.emit("onUpdate", delta);
   }
 }

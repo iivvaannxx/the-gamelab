@@ -2,10 +2,10 @@ import { Application } from "pixi.js";
 
 import "@app/styles/main.css";
 import { Resources } from "@app/assets/resources";
-import { Ground } from "@app/scripts/entities/ground";
 import { EventLoop } from "@app/scripts/event-loop";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
+import type { GameScene } from "./scenes/game";
 
 /**
  * Initializes the Flappy Bird game.
@@ -31,7 +31,6 @@ async function init() {
   await Resources.init();
   Keyboard.init();
 
-  globalThis.__PIXI_APP__ = app;
   Object.assign(Application, { instance: app });
   return app;
 }
@@ -44,47 +43,56 @@ async function start(app: Application) {
   const { MenuScene } = await import("./scenes/menu");
   const { GameScene } = await import("./scenes/game");
 
-  // The ground is always on screen. We can create it here.
-  const ground = new Ground();
+  const eventLoop = new EventLoop(app);
   const menuScene = new MenuScene();
-  const gameScene = new GameScene(ground);
+  let gameScene: GameScene | null = null;
 
-  app.stage.addChild(menuScene, gameScene);
-  gameScene.addChild(ground);
+  // First scene is the menu.
+  app.stage.addChild(menuScene);
 
-  menuScene.visible = false;
-  gameScene.visible = true;
+  const switchToMenu = () => {
+    if (gameScene) {
+      app.stage.removeChild(gameScene);
+      gameScene.destroy();
+      gameScene = null;
+    }
 
-  menuScene.on("game", () => {
-    menuScene.removeChild(ground);
+    menuScene.visible = true;
+    menuScene.reset();
+  };
+
+  const switchToGame = () => {
     menuScene.visible = false;
 
-    gameScene.visible = true;
-    gameScene.addChild(ground);
-  });
+    gameScene = new GameScene();
+    gameScene.on("menu", switchToMenu);
+    app.stage.addChild(gameScene);
 
-  const eventLoop = new EventLoop(app);
-  eventLoop.on("update", (delta) => {
+    // Trigger an initial resize to ensure everything is in place.
+    gameScene.onResize(app.screen.width, app.screen.height);
+  };
+
+  menuScene.on("game", switchToGame);
+
+  eventLoop.on("onUpdate", (delta) => {
     Keyboard.update();
-    ground.onUpdate(delta);
 
-    if (gameScene.visible) {
-      gameScene.onUpdate(delta);
-    }
+    menuScene.onUpdate(delta);
+    gameScene?.onUpdate(delta);
   });
 
-  eventLoop.on("fixedUpdate", (fixedDelta) => {
-    if (gameScene.visible) {
-      gameScene.onFixedUpdate(fixedDelta);
-    }
+  eventLoop.on("onFixedUpdate", (delta) => {
+    gameScene?.onFixedUpdate(delta);
   });
 
-  eventLoop.on("resize", (width, height) => {
-    ground.onResize(width, height);
+  eventLoop.on("onResize", (width, height) => {
     menuScene.onResize(width, height);
-    gameScene.onResize(width, height);
+    gameScene?.onResize(width, height);
   });
 }
 
 // Entrypoint of the game.
 init().then(start);
+
+// Disable the context menu.
+window.addEventListener("contextmenu", (e) => e.preventDefault());

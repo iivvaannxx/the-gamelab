@@ -55,6 +55,19 @@ export class MenuUI extends Container {
     this.scoreButton.element.interactive = enable;
   }
 
+  public reset() {
+    this.toggleInteraction(true);
+
+    // Sometimes the "pointerout" event is not triggered.
+    // And leaves the button in a "hover" state.
+    this.scoreButton.element.scale.set(1);
+    this.startButton.element.scale.set(1);
+
+    // Trigger a resize to ensure everything is in place.
+    const { width, height } = Application.instance.screen;
+    this.onResize(width, height);
+  }
+
   /** Creates and sets up the Flappy Bird logo in the UI. */
   private setupLogo() {
     const logo = new Sprite(Resources.spritesheet.textures.flappyBirdTitle);
