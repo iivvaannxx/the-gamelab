@@ -1,12 +1,12 @@
 import { gsap } from "gsap";
-import { Container, Sprite } from "pixi.js";
+import { Application, Container, Sprite } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
 import { Bird } from "@app/scripts/entities/bird";
 import { SpriteButton } from "@app/scripts/ui/sprite-button";
 
 import type { ResponsiveElement } from "@app/types";
-import { getGameAreaSize, getResponsiveScale } from "@app/utils/screen";
+import { getResponsiveScale } from "@app/utils/screen";
 
 /** Defines the logic for the UI of the menu (buttons, title...) */
 export class MenuUI extends Container {
@@ -72,7 +72,7 @@ export class MenuUI extends Container {
       interactiveChildren: false,
     });
 
-    const { height } = getGameAreaSize();
+    const { height } = Application.instance.screen;
     const tween = gsap.to(container, {
       y: height / 4 + height / 80,
 

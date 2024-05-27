@@ -1,9 +1,8 @@
 import { Container } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
-import { ScoreController } from "@app/scripts/controllers/score";
 import { Level } from "@app/scripts/level";
-
+import { Score } from "@app/scripts/score";
 import { GameUI } from "@app/scripts/ui/game-ui";
 
 import type { Ground } from "@app/scripts/entities/ground";
@@ -13,31 +12,40 @@ import * as Keyboard from "@gamelab/input-system/keyboard";
 enum GameState {
   PENDING_START = 0,
   PLAYING = 1,
-  GAME_OVER = 2,
+  PAUSED = 2,
+  GAME_OVER = 3,
 }
 
-/** Defines all the logic of the game. */
+/** Coordinates the game state. */
 export class GameScene extends Container {
+  private ground: Ground;
   private level: Level;
-  private scoreController: ScoreController;
+  private score: Score;
   private ui: GameUI;
+
   private state: GameState;
+  private statePreviousToPause: GameState;
+  private shareWindow: Window | null;
 
   constructor(ground: Ground) {
     super({ isRenderGroup: true, zIndex: 1 });
-    this.state = GameState.PENDING_START;
 
-    this.ui = new GameUI();
-    this.ui.setScore(0);
-
-    this.scoreController = new ScoreController();
+    this.state = this.statePreviousToPause = GameState.PENDING_START;
+    this.score = new Score();
+    this.shareWindow = null;
+    this.ground = ground;
 
     this.level = new Level(ground);
     this.level.on("point", this.onPoint.bind(this));
     this.level.on("gameover", this.onGameOver.bind(this));
 
-    this.addChild(this.ui);
-    this.addChild(this.level);
+    this.ui = new GameUI();
+    this.ui.setScore(0);
+    this.ui.on("togglepause", this.togglePause.bind(this));
+    this.ui.on("ok", this.returnToMenu.bind(this));
+    this.ui.on("share", this.shareScore.bind(this));
+
+    this.addChild(this.ui, this.level, ground);
   }
 
   /**
@@ -45,8 +53,24 @@ export class GameScene extends Container {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
-    this.waitForInput();
+    if (Keyboard.escapeKey.wasPressedThisFrame) {
+      this.togglePause();
+    }
 
+    // Paused stops any further updates.
+    if (this.state === GameState.PAUSED) {
+      return;
+    }
+
+    if (
+      this.state === GameState.PENDING_START &&
+      Keyboard.spaceKey.wasPressedThisFrame
+    ) {
+      this.ui.hideInstructions();
+      this.state = GameState.PLAYING;
+    }
+
+    // While not started, we don't update the level.
     if (this.state === GameState.PENDING_START) {
       return;
     }
@@ -59,7 +83,10 @@ export class GameScene extends Container {
    * @param fixedDeltaTime The fixed time step, in seconds.
    */
   public onFixedUpdate(fixedDeltaTime: number) {
-    if (this.state === GameState.PENDING_START) {
+    if (
+      this.state === GameState.PAUSED ||
+      this.state === GameState.PENDING_START
+    ) {
       return;
     }
 
@@ -77,24 +104,82 @@ export class GameScene extends Container {
     this.level.onResize(newCanvasWidth, newCanvasHeight);
   }
 
+  /** Toggles the game state between paused and the previous state. */
+  private togglePause() {
+    if (this.state !== GameState.PAUSED) {
+      // We can't pause the game if it's over.
+      if (this.state === GameState.GAME_OVER) {
+        return;
+      }
+
+      this.statePreviousToPause = this.state;
+
+      this.state = GameState.PAUSED;
+      this.ground.toggleStop(true);
+      this.level.onPause(true);
+
+      return;
+    }
+
+    this.state = this.statePreviousToPause;
+    this.level.onPause(false);
+
+    // The ground moves on all states excep on play and on pending start.
+    this.ground.toggleStop(
+      this.state !== GameState.PENDING_START &&
+        this.state !== GameState.PLAYING,
+    );
+  }
+
+  private returnToMenu() {}
+
+  /** Starts a Tweet intent to share the current score. */
+  private shareScore() {
+    if (this.shareWindow) {
+      this.shareWindow.close();
+    }
+
+    const url = "https://gamelab.pages.dev/flappy-bird";
+    const score = this.score.currentScore;
+    const lines = [
+      `I scored ${score} ${
+        score === 1 ? "point" : "points"
+      } in Flappy Bird! Can you beat me?`,
+
+      `Try it on ${url}`,
+      "\nPowered by @PixiJS",
+    ];
+
+    const tweetIntent = new URL("https://twitter.com/intent/tweet");
+    tweetIntent.searchParams.set("text", lines.join("\n"));
+    tweetIntent.searchParams.set("hashtags", "pixijs,webgl,webgpu");
+
+    const [left, top] = [
+      window.screen.width / 2 - 300,
+      window.screen.height / 2 - 175,
+    ];
+
+    const features = `popup=yes,left=${left},top=${top},height=350,width=600`;
+    this.shareWindow = window.open(tweetIntent, "", features);
+  }
+
   /** Event fired when the player dies. */
   private onGameOver() {
-    this.ui.showSummary();
+    const score = this.score.currentScore;
+    const isHighscore = this.score.tryUpdateHighScore();
+
+    this.ui.gameOver();
+    this.ui.showSummary(score, this.score.currentHighScore, isHighscore);
+    this.ui.showActions();
+
     this.state = GameState.GAME_OVER;
   }
 
   /** Event fired when the player scores a point. */
   private onPoint() {
-    this.scoreController.increaseScore();
-    this.ui.setScore(this.scoreController.currentScore);
+    this.score.increase();
+    this.ui.setScore(this.score.currentScore);
 
     Resources.pointSound.play();
-  }
-
-  /** Waits for user input before starting the game. */
-  private waitForInput() {
-    if (Keyboard.spaceKey.wasPressedThisFrame) {
-      this.state = GameState.PLAYING;
-    }
   }
 }

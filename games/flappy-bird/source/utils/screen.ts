@@ -1,16 +1,5 @@
-import { Application } from "pixi.js";
-
 /** Factor used to scale all the game elements with the screen. */
 const RESPONSIVENESS_FACTOR = 150;
-
-/**
- * Retrieves the size of the game area.
- * @returns An object containing the width and height of the game area.
- */
-export function getGameAreaSize() {
-  const { width, height } = Application.instance.screen;
-  return { width, height };
-}
 
 /**
  * Calculates the scale used to fit the game elements to the screen.

@@ -8,7 +8,14 @@ const data = {
 
   animations: {
     bird: ["birdFlapUp", "birdFlapMid", "birdFlapDown"],
-    sparkles: ["sparkle0", "sparkle1", "sparkle2", "sparkle3"],
+    sparkles: [
+      "sparkle0",
+      "sparkle1",
+      "sparkle2",
+      "sparkle3",
+      "sparkle2",
+      "sparkle1",
+    ],
   },
 
   frames: {
@@ -170,6 +177,30 @@ const data = {
       sourceSize: {
         w: 16,
         h: 7,
+      },
+    },
+
+    plus: {
+      anchor: { x: 0.5, y: 0.5 },
+      frame: {
+        x: 290,
+        y: 231,
+        w: 5,
+        h: 5,
+      },
+
+      rotated: false,
+      trimmed: false,
+      spriteSourceSize: {
+        x: 0,
+        y: 0,
+        w: 5,
+        h: 5,
+      },
+
+      sourceSize: {
+        w: 5,
+        h: 5,
       },
     },
 

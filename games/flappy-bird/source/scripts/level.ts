@@ -103,6 +103,15 @@ export class Level extends Container {
     }
   }
 
+  public onPause(paused: boolean) {
+    if (paused) {
+      this.bird.stop();
+      return;
+    }
+
+    this.bird.play();
+  }
+
   /**
    * Handles the spawning and updating of pipes in the game level.
    * @param delta - The time elapsed since the last frame.

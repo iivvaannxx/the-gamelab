@@ -87,7 +87,7 @@ export class Bird extends AnimatedSprite {
    * @param newCanvasHeight The new height of the game area.
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
-    this.x = newCanvasWidth / 3;
+    this.x = newCanvasWidth / 3.5;
     this.y = this.screenRelativeY * newCanvasHeight;
 
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);

@@ -49,13 +49,18 @@ async function start(app: Application) {
   const menuScene = new MenuScene();
   const gameScene = new GameScene(ground);
 
-  app.stage.addChild(menuScene, gameScene, ground);
-  menuScene.visible = true;
-  gameScene.visible = false;
+  app.stage.addChild(menuScene, gameScene);
+  gameScene.addChild(ground);
+
+  menuScene.visible = false;
+  gameScene.visible = true;
 
   menuScene.on("game", () => {
+    menuScene.removeChild(ground);
     menuScene.visible = false;
+
     gameScene.visible = true;
+    gameScene.addChild(ground);
   });
 
   const eventLoop = new EventLoop(app);

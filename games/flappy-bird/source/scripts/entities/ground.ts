@@ -33,6 +33,7 @@ export class Ground extends TilingSprite {
       return;
     }
 
+    console.log(this.x);
     const { width } = Application.instance.screen;
     this.x -= (width / 3) * delta;
 
@@ -51,6 +52,7 @@ export class Ground extends TilingSprite {
    */
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.y = newCanvasHeight;
+    this.x = 0;
 
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
     this.scale.set(scale * 1.05);

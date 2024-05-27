@@ -1,5 +1,5 @@
 /** Defines the logic for the game score. */
-export class ScoreController {
+export class Score {
   private score = 0;
   private highScore = 0;
 
@@ -20,13 +20,13 @@ export class ScoreController {
   }
 
   /** Increases the score of the player (always by 1). */
-  public increaseScore() {
+  public increase() {
     // The score always increases by 1.
     this.score++;
   }
 
   /** Resets the score of the player. */
-  public resetScore() {
+  public reset() {
     this.score = 0;
   }
 
