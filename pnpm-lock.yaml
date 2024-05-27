@@ -29,9 +29,6 @@ importers:
       '@gamelab/input-system':
         specifier: workspace:^
         version: link:../../packages/input-system
-      '@pixi-essentials/bounds':
-        specifier: ^3.0.0
-        version: 3.0.0(@pixi/math@7.4.2)
       '@pixi/sound':
         specifier: ^6.0.0
         version: 6.0.0(pixi.js@8.1.5)
@@ -820,20 +817,8 @@ packages:
       fastq: 1.17.1
     dev: true
 
-  /@pixi-essentials/bounds@3.0.0(@pixi/math@7.4.2):
-    resolution: {integrity: sha512-AHWL8J1pc7tKB9qFW/x909/NZkLLCBKzeDWiwHVOLyCAiSVYHU+dACAohKNfDHLf1rgTgM5R7JHRQR6SA1gG/g==}
-    peerDependencies:
-      '@pixi/math': ^7.0.0
-    dependencies:
-      '@pixi/math': 7.4.2
-    dev: false
-
   /@pixi/colord@2.9.6:
     resolution: {integrity: sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==}
-    dev: false
-
-  /@pixi/math@7.4.2:
-    resolution: {integrity: sha512-7jHmCQoYk6e0rfSKjdNFOPl0wCcdgoraxgteXJTTHv3r0bMNx2pHD9FJ0VvocEUG7XHfj55O3+u7yItOAx0JaQ==}
     dev: false
 
   /@pixi/sound@6.0.0(pixi.js@8.1.5):

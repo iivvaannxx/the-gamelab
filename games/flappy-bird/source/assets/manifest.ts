@@ -14,30 +14,3 @@ export const manifest: AssetsManifest = {
     },
   ],
 };
-
-export const soundsManifest = [
-  {
-    alias: "dieSound",
-    src: "/assets/sounds/die.ogg",
-  },
-
-  {
-    alias: "hitSound",
-    src: "/assets/sounds/hit.ogg",
-  },
-
-  {
-    alias: "pointSound",
-    src: "/assets/sounds/point.ogg",
-  },
-
-  {
-    alias: "swooshSound",
-    src: "/assets/sounds/swoosh.ogg",
-  },
-
-  {
-    alias: "wingSound",
-    src: "/assets/sounds/wing.ogg",
-  },
-];

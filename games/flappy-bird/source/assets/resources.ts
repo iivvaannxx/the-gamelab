@@ -6,9 +6,7 @@ import { type GameSpritesheet, getSpritesheet } from "@app/assets/spritesheet";
 
 /** A little helper to easily access the resources of our game. */
 export class Resources {
-  /** The spritesheet with all our game textures. */
   public static spritesheet: GameSpritesheet;
-
   public static numbersTextures: Texture[] = [];
 
   public static fallSound: Sound;
@@ -26,8 +24,13 @@ export class Resources {
     Assets.backgroundLoadBundle("game");
 
     const spritesheet = await getSpritesheet();
-
     Resources.spritesheet = spritesheet;
+
+    for (const tex of Object.values(spritesheet.textures) as Texture[]) {
+      // We use pixel art, so we want to avoid any smoothing.
+      tex.source.scaleMode = "nearest";
+    }
+
     Resources.numbersTextures = [
       spritesheet.textures.num0,
       spritesheet.textures.num1,
@@ -41,48 +44,27 @@ export class Resources {
       spritesheet.textures.num9,
     ];
 
-    for (const tex of Object.values(
-      Resources.spritesheet.textures,
-    ) as Texture[]) {
-      tex.source.scaleMode = "nearest";
-    }
+    Resources.wingSound = Resources.getSound("/assets/sounds/wing.ogg", true);
+    Resources.fallSound = Resources.getSound("/assets/sounds/fall.ogg", false);
+    Resources.hitSound = Resources.getSound("/assets/sounds/hit.ogg", true);
+    Resources.pointSound = Resources.getSound("/assets/sounds/point.ogg", true);
+    Resources.swooshSound = Resources.getSound(
+      "/assets/sounds/swoosh.ogg",
+      true,
+    );
+  }
 
-    // The most important sound is this, ensure it's loaded first.
-    Resources.wingSound = Sound.from({
-      url: "/assets/sounds/wing.ogg",
-      preload: true,
-
-      autoPlay: false,
-      loop: false,
-    });
-
-    Resources.fallSound = Sound.from({
-      url: "/assets/sounds/fall.ogg",
-      preload: false,
-
-      autoPlay: false,
-      loop: false,
-    });
-
-    Resources.hitSound = Sound.from({
-      url: "/assets/sounds/hit.ogg",
-      preload: true,
-
-      autoPlay: false,
-      loop: false,
-    });
-
-    Resources.pointSound = Sound.from({
-      url: "/assets/sounds/point.ogg",
-      preload: true,
-
-      autoPlay: false,
-      loop: false,
-    });
-
-    Resources.swooshSound = Sound.from({
-      url: "/assets/sounds/swoosh.ogg",
-      preload: true,
+  /**
+   * Loads a sound from the specified URL.
+   *
+   * @param url - The URL of the sound file.
+   * @param preload - Indicates whether the sound should be preloaded.
+   * @returns A `Sound` object representing the loaded sound.
+   */
+  private static getSound(url: string, preload: boolean) {
+    return Sound.from({
+      url: url,
+      preload: preload,
 
       autoPlay: false,
       loop: false,
