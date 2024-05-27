@@ -151,7 +151,7 @@ export class GameScene extends Container {
       this.shareWindow.close();
     }
 
-    const url = "https://gamelab.pages.dev/flappy-bird";
+    const url = "https://gamelab.pages.dev";
     const score = this.score.currentScore;
     const lines = [
       `I scored ${score} ${
