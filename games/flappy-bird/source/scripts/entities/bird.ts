@@ -5,6 +5,7 @@ import { getResponsiveScale } from "@app/utils/screen";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
 import * as Mouse from "@gamelab/input-system/mouse";
+import * as Touch from "@gamelab/input-system/touch";
 
 /** Defines the logic for the Bird (player). */
 export class Bird extends AnimatedSprite {
@@ -57,7 +58,8 @@ export class Bird extends AnimatedSprite {
 
     if (
       Keyboard.spaceKey.wasPressedThisFrame ||
-      Mouse.leftButton.wasPressedThisFrame
+      Mouse.leftButton.wasPressedThisFrame ||
+      Touch.receivedTouchLastFrame
     ) {
       // This can be interpreted as 0.31 times the force of gravity.
       // It feels pretty balanced. The 0.31 is arbitrary.
