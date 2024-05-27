@@ -1,9 +1,7 @@
 @import "./reset.css";
 
-
 html,
 body {
-
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -13,13 +11,11 @@ body {
 }
 
 body {
-
   container-type: size;
   height: 100%;
 }
 
 #responsive-wrapper {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +24,6 @@ body {
 }
 
 #app {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,9 +47,10 @@ body {
 .loader {
   position: fixed;
   inset: 0;
-
   width: 100%;
   height: 100%;
+
+  pointer-events: none;
 }
 
 .loader.animate-out {
@@ -62,7 +58,6 @@ body {
 }
 
 @container (min-aspect-ratio: 9 / 16) {
-
   #app {
     width: auto;
     height: 100%;
