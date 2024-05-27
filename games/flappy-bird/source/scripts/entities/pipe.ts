@@ -46,7 +46,7 @@ export class Pipe extends Sprite {
    */
   public onUpdate(delta: number) {
     const { width, height } = Application.instance.screen;
-    this.x -= (width / 3) * delta;
+    this.x -= (width / 2.5) * delta;
 
     // Pipes move on X only, so we only need to update the X coordinate.
     this.colliderShape.x = this.x - this.colliderShape.width / 2;

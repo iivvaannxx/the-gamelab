@@ -12,7 +12,7 @@ import { getResponsiveScale } from "@app/utils/screen";
 /** Defines the logic for the level (pipe generation, ground collision...). */
 export class Level extends Container {
   /** The interval at which pipes spawn. */
-  private static readonly PIPE_SPAWN_INTERVAL = 2.5;
+  private static readonly PIPE_SPAWN_INTERVAL = 1.5;
 
   private offscreenPipes = 0;
   private pipeSpawnTimer: number;
@@ -21,7 +21,6 @@ export class Level extends Container {
 
   private ground: Ground;
   private bird: Bird;
-
   private gameOver = false;
 
   /** The height of the area where the bird can fly and the pipes get spawned. */
@@ -162,10 +161,10 @@ export class Level extends Container {
   /** Spawns a new pair of pipes into the level. */
   private spawnPipes() {
     // We spawn pipes between the 30% and 70% of the playable area.
-    // But in between pipe generations the maximum difference in Y should be 20%.
+    // But in between pipe generations the maximum difference in Y should be 30%.
     // This way we avoid drastic changes in the pipe opening positions.
-    const minGapY = Math.max(0.3, this.lastGapY - 0.2);
-    const maxGapY = Math.min(0.7, this.lastGapY + 0.2);
+    const minGapY = Math.max(0.3, this.lastGapY - 0.3);
+    const maxGapY = Math.min(0.7, this.lastGapY + 0.3);
     const gapSize = 0.25;
 
     const randomY = randomFloatRange(minGapY, maxGapY);

@@ -45,9 +45,9 @@ export class Resources {
     ];
 
     Resources.wingSound = Resources.getSound("/assets/sounds/wing.ogg", true);
-    Resources.fallSound = Resources.getSound("/assets/sounds/fall.ogg", false);
-    Resources.hitSound = Resources.getSound("/assets/sounds/hit.ogg", true);
     Resources.pointSound = Resources.getSound("/assets/sounds/point.ogg", true);
+    Resources.fallSound = Resources.getSound("/assets/sounds/fall.ogg", true);
+    Resources.hitSound = Resources.getSound("/assets/sounds/hit.ogg", true);
     Resources.swooshSound = Resources.getSound(
       "/assets/sounds/swoosh.ogg",
       true,

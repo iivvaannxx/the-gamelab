@@ -34,7 +34,7 @@ export class Ground extends TilingSprite {
     }
 
     const { width } = Application.instance.screen;
-    this.x -= (width / 3) * delta;
+    this.x -= (width / 2.5) * delta;
 
     // Half of the ground is offscreen.
     // Move it back to the right to create an "infinite" ground.
