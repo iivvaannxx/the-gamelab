@@ -1,5 +1,4 @@
-import { getGameAreaSize } from "@app/utils/screen";
-import { type Application, EventEmitter } from "pixi.js";
+import { Application, EventEmitter } from "pixi.js";
 
 type Events = {
   /** The update event is fired every frame. */
@@ -50,7 +49,7 @@ export class EventLoop extends EventEmitter<Events> {
    */
   private onTick(delta: number) {
     this.totalTime += delta;
-    const { width, height } = getGameAreaSize();
+    const { width, height } = Application.instance.screen;
 
     // Check if the game area has been resized every frame.
     // Probably better than window event listeners.

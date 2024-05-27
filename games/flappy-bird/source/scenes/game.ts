@@ -79,7 +79,7 @@ export class GameScene extends Container {
 
   /** Event fired when the player dies. */
   private onGameOver() {
-    this.ui.whiteFlash();
+    this.ui.showSummary();
     this.state = GameState.GAME_OVER;
   }
 

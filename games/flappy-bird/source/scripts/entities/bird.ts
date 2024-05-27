@@ -1,4 +1,4 @@
-import { AnimatedSprite, Application, Ellipse, Point } from "pixi.js";
+import { AnimatedSprite, Application, Ellipse } from "pixi.js";
 
 import { Resources } from "@app/assets/resources";
 import { getResponsiveScale } from "@app/utils/screen";
@@ -10,10 +10,12 @@ export class Bird extends AnimatedSprite {
   /** The velocity at which the bird tilts. */
   private static readonly ANGULAR_VELOCITY = 6;
 
+  /** The multiplier for the gravity effect. */
+  private static readonly GRAVITY_MULTIPLIER = 2;
+
   private dead = false;
   private screenRelativeY = 0;
   private yVelocity = 0;
-
   private colliderShape: Ellipse;
 
   /** The lowest Y coordinate of the bird. */
@@ -21,6 +23,7 @@ export class Bird extends AnimatedSprite {
     return this.y + this.getBounds().height / 2;
   }
 
+  /** The collider shape of the bird. */
   public get collider() {
     return this.colliderShape;
   }
@@ -29,7 +32,7 @@ export class Bird extends AnimatedSprite {
     const animationTextures = Resources.spritesheet.animations.bird;
     super(animationTextures);
 
-    this.animationSpeed = 0.1;
+    this.animationSpeed /= 10;
     this.play();
 
     // The bird starts at the middle of the screen.
@@ -43,6 +46,8 @@ export class Bird extends AnimatedSprite {
    * @param delta The time in seconds since the last frame.
    */
   public onUpdate(delta: number) {
+    const { height } = Application.instance.screen;
+
     if (this.yVelocity > 0 || this.dead) {
       // Point down when falling.
       this.rotation += delta * Bird.ANGULAR_VELOCITY;
@@ -50,13 +55,12 @@ export class Bird extends AnimatedSprite {
     }
 
     if (Keyboard.spaceKey.wasPressedThisFrame) {
-      this.jump();
+      // This can be interpreted as 0.31 times the force of gravity.
+      // It feels pretty balanced. The 0.31 is arbitrary.
+      this.jump(height * Bird.GRAVITY_MULTIPLIER * 0.31);
     }
 
-    const { height } = Application.instance.screen;
     this.screenRelativeY = this.y / height;
-
-    // As we only move on Y, we only need to update the Y coordinate.
     this.colliderShape.y = this.y;
   }
 
@@ -65,7 +69,9 @@ export class Bird extends AnimatedSprite {
    * @param fixedDeltaTime The fixed time step.
    */
   public onFixedUpdate(fixedDeltaTime: number) {
-    this.yVelocity += 4000 * fixedDeltaTime;
+    const { height } = Application.instance.screen;
+
+    this.yVelocity += height * Bird.GRAVITY_MULTIPLIER * fixedDeltaTime;
     this.y += this.yVelocity * fixedDeltaTime;
 
     if (this.y - this.height / 2 < 0) {
@@ -104,14 +110,14 @@ export class Bird extends AnimatedSprite {
   }
 
   /** Makes the bird stop falling and do a little jump.  */
-  private jump() {
+  private jump(amount: number) {
     if (this.dead) {
       return;
     }
 
     // Tilt the bird up to -20 degrees.
     this.rotation = -20 * (Math.PI / 180);
-    this.yVelocity = -1500;
+    this.yVelocity = -amount;
 
     Resources.wingSound.play();
   }

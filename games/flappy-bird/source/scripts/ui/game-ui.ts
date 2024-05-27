@@ -50,7 +50,7 @@ export class GameUI extends Container {
    * Flashes a white overlay on the UI.
    * @param duration The duration of the flash in seconds. Default is 0.3 seconds.
    */
-  public whiteFlash(duration = 0.3) {
+  public showSummary() {
     const overlay = new Overlay({ color: "white" });
 
     // We add it to the app stage to ensure it displays always on top of everything.
@@ -58,7 +58,9 @@ export class GameUI extends Container {
 
     // The overlay starts already in, then fades out.
     overlay.alpha = 1;
-    overlay.fadeOut(duration, () => {
+    this.score.element.visible = false;
+
+    overlay.fadeOut(0.3, () => {
       Application.instance.stage.removeChild(overlay);
       overlay.destroy();
     });
@@ -69,9 +71,10 @@ export class GameUI extends Container {
    * @param score - The score to be displayed.
    */
   public setScore(score: number) {
-    const numbers = Resources.numbersTextures;
-    const scoreDigits = `${score}`.split("").map(Number);
-    const sprites = scoreDigits.map((digit) => new Sprite(numbers[digit]));
+    const sprites = `${score}`.split("").map((digit) => {
+      const index = Number(digit);
+      return new Sprite(Resources.numbersTextures[index]);
+    });
 
     const spacing = 1;
     const totalWidth =
