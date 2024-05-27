@@ -3,5 +3,5 @@ export {
   isInitialized,
   update,
   touchCount,
-  receivedTouchLastFrame,
+  receivedTouchThisFrame,
 } from "./state";

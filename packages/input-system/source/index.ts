@@ -315,7 +315,7 @@ export const Mouse = Object.freeze(
 );
 
 import {
-  receivedTouchLastFrame,
+  receivedTouchThisFrame,
   init as tInit,
   isInitialized as tIsInitialized,
   update as tUpdate,
@@ -330,6 +330,6 @@ export const Touch = Object.freeze(
     update: tUpdate,
 
     touchCount,
-    receivedTouchLastFrame,
+    receivedTouchThisFrame,
   }),
 );
