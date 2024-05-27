@@ -122,11 +122,13 @@ export class GameScene extends Container {
       this.state = GameState.PAUSED;
       this.ground.toggleStop(true);
       this.level.onPause(true);
+      this.ui.togglePauseSprite(true);
 
       return;
     }
 
     this.state = this.statePreviousToPause;
+    this.ui.togglePauseSprite(false);
     this.level.onPause(false);
 
     // The ground moves on all states excep on play and on pending start.

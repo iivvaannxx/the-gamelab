@@ -147,13 +147,13 @@ export class GameUI extends Container {
     // Give a medal based on the score.
     medal.visible = sparkles.visible = score >= 10;
     medal.texture =
-      score >= 10
-        ? Resources.spritesheet.textures.bronzeMedal
-        : score >= 20
-          ? Resources.spritesheet.textures.silverMedal
-          : score >= 30
-            ? Resources.spritesheet.textures.goldMedal
-            : Resources.spritesheet.textures.platinumMedal;
+      score >= 40
+        ? Resources.spritesheet.textures.platinumMedal
+        : score >= 30
+          ? Resources.spritesheet.textures.goldMedal
+          : score >= 20
+            ? Resources.spritesheet.textures.silverMedal
+            : Resources.spritesheet.textures.bronzeMedal;
 
     gsap.to(element, {
       alpha: 1,
@@ -192,6 +192,17 @@ export class GameUI extends Container {
   }
 
   /**
+   * Toggles the pause button sprite based on the provided `isPaused` flag.
+   * @param isPaused - A boolean indicating whether the game is paused or not.
+   */
+  public togglePauseSprite(isPaused: boolean) {
+    const resumeTexture = Resources.spritesheet.textures.playButton;
+    const pauseTexture = Resources.spritesheet.textures.pauseButton;
+
+    this.pauseButton.element.texture = isPaused ? resumeTexture : pauseTexture;
+  }
+
+  /**
    * Generates an array of Sprite objects representing the score digits.
    *
    * @param score - The score value.
@@ -227,14 +238,12 @@ export class GameUI extends Container {
 
   /** Creates and sets up the "PAUSE" button in the UI. */
   private setupPauseButton() {
-    const pauseButton = new SpriteButton(
-      Resources.spritesheet.textures.pauseButton,
-      {
-        onPointerDown: () => {
-          this.emit("togglepause");
-        },
+    const pauseTexture = Resources.spritesheet.textures.pauseButton;
+    const pauseButton = new SpriteButton(pauseTexture, {
+      onPointerDown: () => {
+        this.emit("togglepause");
       },
-    );
+    });
 
     this.addChild(pauseButton);
     return {
