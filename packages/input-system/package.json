@@ -20,6 +20,10 @@
     "./mouse": {
       "default": "./dist/mouse.js",
       "types": "./dist/mouse.d.ts"
+    },
+    "./touch": {
+      "default": "./dist/touch.js",
+      "types": "./dist/touch.d.ts"
     }
   },
 

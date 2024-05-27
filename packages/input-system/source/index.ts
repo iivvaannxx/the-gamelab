@@ -313,3 +313,23 @@ export const Mouse = Object.freeze(
     forwardButton,
   }),
 );
+
+import {
+  receivedTouchLastFrame,
+  init as tInit,
+  isInitialized as tIsInitialized,
+  update as tUpdate,
+  touchCount,
+} from "./touch";
+
+/** Defines a simple API to interact with Touch input. */
+export const Touch = Object.freeze(
+  Object.assign(class Touch {}, {
+    init: tInit,
+    isInitialized: tIsInitialized,
+    update: tUpdate,
+
+    touchCount,
+    receivedTouchLastFrame,
+  }),
+);

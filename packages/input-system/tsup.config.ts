@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     keyboard: "./source/keyboard/index.ts",
     mouse: "./source/mouse/index.ts",
+    touch: "./source/touch/index.ts",
     index: "./source/index.ts",
   },
 
