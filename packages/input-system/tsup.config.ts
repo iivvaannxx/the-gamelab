@@ -3,6 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   entry: {
     keyboard: "./source/keyboard/index.ts",
+    mouse: "./source/mouse/index.ts",
     index: "./source/index.ts",
   },
 

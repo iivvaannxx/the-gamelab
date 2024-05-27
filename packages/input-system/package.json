@@ -16,6 +16,10 @@
     "./keyboard": {
       "default": "./dist/keyboard.js",
       "types": "./dist/keyboard.d.ts"
+    },
+    "./mouse": {
+      "default": "./dist/mouse.js",
+      "types": "./dist/mouse.d.ts"
     }
   },
 

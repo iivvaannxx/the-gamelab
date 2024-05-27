@@ -121,7 +121,7 @@ export function update() {
 }
 
 /**
- * Creates a keyboard control with the specified key code.
+ * Creates a keyboard control from the specified key code.
  *
  * @param code The key code for the control.
  * @returns The created keyboard control.
@@ -137,7 +137,7 @@ export function update() {
     side effect of modifying the manager state), we can safely annotate 
     it because the side effect does not break the code in any way.
 
-    Bundlers can't assume  and thus all the usages of function 
+    Bundlers can't assume this and thus all the usages of the function 
     would not be treeshaken. The annontation allows all the non-used keys 
     of the `keys.ts` file to be removed from the final bundle.
   */

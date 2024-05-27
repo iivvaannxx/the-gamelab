@@ -133,17 +133,22 @@ import {
   zKey,
 } from "./keyboard/keys";
 
-import { init, isInitialized, registerKey, update } from "./keyboard/manager";
+import {
+  init as kInit,
+  isInitialized as kIsInitialized,
+  update as kUpdate,
+  registerKey,
+} from "./keyboard/manager";
 
 /** Defines a simple API to interact with Keyboard input. */
 export const Keyboard = Object.freeze(
   // Combine everything into a single class for convenience.
   // The consumer can decide how to import it.
   Object.assign(class Keyboard {}, {
-    init,
-    isInitialized,
+    init: kInit,
+    isInitialized: kIsInitialized,
     registerKey,
-    update,
+    update: kUpdate,
 
     aKey,
     altLeftKey,
@@ -275,5 +280,36 @@ export const Keyboard = Object.freeze(
     xKey,
     yKey,
     zKey,
+  }),
+);
+
+import {
+  delta,
+  init as mInit,
+  isInitialized as mIsInitialized,
+  update as mUpdate,
+} from "./mouse";
+
+import {
+  backButton,
+  forwardButton,
+  leftButton,
+  middleButton,
+  rightButton,
+} from "./mouse/buttons";
+
+/** Defines a simple API to interact with the Mouse. */
+export const Mouse = Object.freeze(
+  Object.assign(class Mouse {}, {
+    init: mInit,
+    isInitialized: mIsInitialized,
+    update: mUpdate,
+    delta,
+
+    leftButton,
+    middleButton,
+    rightButton,
+    backButton,
+    forwardButton,
   }),
 );
