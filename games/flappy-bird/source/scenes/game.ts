@@ -69,7 +69,7 @@ export class GameScene extends Container {
       this.state === GameState.PENDING_START &&
       (Keyboard.spaceKey.wasPressedThisFrame ||
         Mouse.leftButton.wasPressedThisFrame ||
-        Touch.receivedTouchLastFrame)
+        Touch.receivedTouchThisFrame)
     ) {
       this.ui.hideInstructions();
       this.state = GameState.PLAYING;
@@ -151,7 +151,7 @@ export class GameScene extends Container {
       this.shareWindow.close();
     }
 
-    const url = "https://gamelab.pages.dev";
+    const url = "https://thegamelab.dev";
     const score = this.score.currentScore;
     const lines = [
       `I scored ${score} ${

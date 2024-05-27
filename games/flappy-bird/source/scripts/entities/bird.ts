@@ -59,11 +59,15 @@ export class Bird extends AnimatedSprite {
     if (
       Keyboard.spaceKey.wasPressedThisFrame ||
       Mouse.leftButton.wasPressedThisFrame ||
-      Touch.receivedTouchLastFrame
+      Touch.receivedTouchThisFrame
     ) {
       // This can be interpreted as 0.31 times the force of gravity.
       // It feels pretty balanced. The 0.31 is arbitrary.
       this.jump(height * Bird.GRAVITY_MULTIPLIER * 0.31);
+    }
+
+    if (Touch.receivedTouchThisFrame) {
+      console.log("received touch");
     }
 
     this.screenRelativeY = this.y / height;
