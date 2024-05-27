@@ -66,10 +66,6 @@ export class Bird extends AnimatedSprite {
       this.jump(height * Bird.GRAVITY_MULTIPLIER * 0.31);
     }
 
-    if (Touch.receivedTouchThisFrame) {
-      console.log("received touch");
-    }
-
     this.screenRelativeY = this.y / height;
     this.colliderShape.y = this.y;
   }
