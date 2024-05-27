@@ -6,4 +6,4 @@ export {
   position,
   scroll,
   delta,
-} from "./manager";
+} from "./state";

@@ -1,2 +1,2 @@
 export * from "./keys";
-export { init, isInitialized, registerKey, update } from "./manager";
+export { init, isInitialized, registerKey, update } from "./state";

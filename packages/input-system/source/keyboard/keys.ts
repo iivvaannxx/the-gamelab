@@ -1,4 +1,4 @@
-import { registerKey } from "./manager";
+import { registerKey } from "./state";
 
 /** Represents the key control for the `AltLeft` key. */
 export const altLeftKey = registerKey("AltLeft");

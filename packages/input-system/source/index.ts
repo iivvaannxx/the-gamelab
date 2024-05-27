@@ -138,7 +138,7 @@ import {
   isInitialized as kIsInitialized,
   update as kUpdate,
   registerKey,
-} from "./keyboard/manager";
+} from "./keyboard/state";
 
 /** Defines a simple API to interact with Keyboard input. */
 export const Keyboard = Object.freeze(

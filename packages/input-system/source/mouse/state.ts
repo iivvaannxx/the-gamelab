@@ -199,7 +199,7 @@ export function update() {
   /* 
     About the above "NO_SIDE_EFFECTS" annotation:
 
-    Read the same notice at: /source/keyboard/manager.ts
+    Read the same notice at: /source/keyboard/state.ts
     The reasons are the same.
   */
 

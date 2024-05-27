@@ -1,4 +1,4 @@
-import { registerButton } from "./manager";
+import { registerButton } from "./state";
 
 /** Represents the control for the "Left" mouse button. */
 export const leftButton = registerButton("left");
