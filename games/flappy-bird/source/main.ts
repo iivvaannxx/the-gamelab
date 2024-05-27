@@ -52,8 +52,9 @@ async function start(app: Application) {
 
   const switchToMenu = () => {
     if (gameScene) {
-      app.stage.removeChild(gameScene);
+      gameScene.removeFromParent();
       gameScene.destroy();
+
       gameScene = null;
     }
 

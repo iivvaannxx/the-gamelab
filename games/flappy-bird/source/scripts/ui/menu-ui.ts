@@ -12,7 +12,6 @@ import { getResponsiveScale } from "@app/utils/screen";
 export class MenuUI extends Container {
   private copyright: ResponsiveElement<Sprite>;
   private startButton: ResponsiveElement<SpriteButton>;
-  private scoreButton: ResponsiveElement<SpriteButton>;
   private logo: ResponsiveElement<Container>;
 
   constructor() {
@@ -21,7 +20,6 @@ export class MenuUI extends Container {
     this.logo = this.setupLogo();
     this.copyright = this.setupCopyrightNotice();
     this.startButton = this.setupStartButton();
-    this.scoreButton = this.setupScoreButton();
 
     // Ensure the UI is always on top.
     this.zIndex = 10;
@@ -36,7 +34,6 @@ export class MenuUI extends Container {
   public onResize(newCanvasWidth: number, newCanvasHeight: number) {
     this.logo.onGameResize(newCanvasWidth, newCanvasHeight);
     this.startButton.onGameResize(newCanvasWidth, newCanvasHeight);
-    this.scoreButton.onGameResize(newCanvasWidth, newCanvasHeight);
     this.copyright.onGameResize(newCanvasWidth, newCanvasHeight);
 
     const scale = getResponsiveScale(newCanvasWidth, newCanvasHeight);
@@ -52,7 +49,6 @@ export class MenuUI extends Container {
    */
   public toggleInteraction(enable: boolean) {
     this.startButton.element.interactive = enable;
-    this.scoreButton.element.interactive = enable;
   }
 
   public reset() {
@@ -60,7 +56,6 @@ export class MenuUI extends Container {
 
     // Sometimes the "pointerout" event is not triggered.
     // And leaves the button in a "hover" state.
-    this.scoreButton.element.scale.set(1);
     this.startButton.element.scale.set(1);
 
     // Trigger a resize to ensure everything is in place.
@@ -141,29 +136,8 @@ export class MenuUI extends Container {
     return {
       element: startButton,
       onGameResize(newCanvasWidth: number, newCanvasHeight: number) {
-        startButton.x = newCanvasWidth * 0.25;
+        startButton.x = newCanvasWidth * 0.5;
         startButton.y = newCanvasHeight * 0.725;
-      },
-    };
-  }
-
-  /** Creates and sets up the "SCORE" button in the UI. */
-  private setupScoreButton() {
-    const scoreButton = new SpriteButton(
-      Resources.spritesheet.textures.scoreButton,
-      {
-        onPointerDown: () => {
-          // Show score.
-        },
-      },
-    );
-
-    this.addChild(scoreButton);
-    return {
-      element: scoreButton,
-      onGameResize(newCanvasWidth: number, newCanvasHeight: number) {
-        scoreButton.x = newCanvasWidth * 0.75;
-        scoreButton.y = newCanvasHeight * 0.725;
       },
     };
   }
