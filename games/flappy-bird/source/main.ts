@@ -1,6 +1,8 @@
 import { Application } from "pixi.js";
 
 import "@app/styles/main.css";
+import "ldrs/bouncy";
+
 import { Resources } from "@app/assets/resources";
 import { EventLoop } from "@app/scripts/event-loop";
 
@@ -12,7 +14,8 @@ import type { GameScene } from "./scenes/game";
  * @returns The instance of the application.
  */
 async function init() {
-  const container = document.querySelector("#app") as HTMLDivElement;
+  const container = document.querySelector("#app") as HTMLElement;
+  const loader = document.querySelector(".loader") as HTMLElement;
 
   // Initialize the Pixi.js application.
   const app = new Application();
@@ -32,6 +35,9 @@ async function init() {
   Keyboard.init();
 
   Object.assign(Application, { instance: app });
+  loader.classList.add("animate-out");
+  container.classList.add("animate-in");
+
   return app;
 }
 

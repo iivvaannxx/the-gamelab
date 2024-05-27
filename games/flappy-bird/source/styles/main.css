@@ -41,14 +41,29 @@ body {
   background-size: cover;
   image-rendering: pixelated;
 
-  animation: fade-in 1s ease-in-out forwards;
   opacity: 0;
+}
+
+#app.animate-in {
+  animation: fade-in 1s ease-in-out forwards;
+  animation-delay: 0.5s;
+}
+
+.loader {
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.loader.animate-out {
+  animation: fade-out 0.5s ease-in-out forwards;
 }
 
 @container (min-aspect-ratio: 9 / 16) {
 
   #app {
-
     width: auto;
     height: 100%;
   }
@@ -61,5 +76,15 @@ body {
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }
