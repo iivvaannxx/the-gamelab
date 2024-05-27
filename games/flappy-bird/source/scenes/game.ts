@@ -9,6 +9,7 @@ import { Ground } from "@app/scripts/entities/ground";
 import { Overlay } from "@app/scripts/ui/overlay";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
+import * as Mouse from "@gamelab/input-system/mouse";
 
 /** Defines all the possible states of the game. */
 enum GameState {
@@ -65,7 +66,8 @@ export class GameScene extends Container {
 
     if (
       this.state === GameState.PENDING_START &&
-      Keyboard.spaceKey.wasPressedThisFrame
+      (Keyboard.spaceKey.wasPressedThisFrame ||
+        Mouse.leftButton.wasPressedThisFrame)
     ) {
       this.ui.hideInstructions();
       this.state = GameState.PLAYING;

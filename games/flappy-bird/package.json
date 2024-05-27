@@ -1,6 +1,6 @@
 {
   "name": "@gamelab/flappy-bird",
-  "description": "Flappy Bird game made with Pixi.js",
+  "description": "🎮 A clone of the popular Flappy Bird game. Made with Typescript and Pixi.js",
   "private": true,
   "version": "1.0.0",
   "type": "module",

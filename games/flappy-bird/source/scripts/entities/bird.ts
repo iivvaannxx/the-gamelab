@@ -4,6 +4,7 @@ import { Resources } from "@app/assets/resources";
 import { getResponsiveScale } from "@app/utils/screen";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
+import * as Mouse from "@gamelab/input-system/mouse";
 
 /** Defines the logic for the Bird (player). */
 export class Bird extends AnimatedSprite {
@@ -54,7 +55,10 @@ export class Bird extends AnimatedSprite {
       this.rotation = Math.min(Math.PI / 2, this.rotation);
     }
 
-    if (Keyboard.spaceKey.wasPressedThisFrame) {
+    if (
+      Keyboard.spaceKey.wasPressedThisFrame ||
+      Mouse.leftButton.wasPressedThisFrame
+    ) {
       // This can be interpreted as 0.31 times the force of gravity.
       // It feels pretty balanced. The 0.31 is arbitrary.
       this.jump(height * Bird.GRAVITY_MULTIPLIER * 0.31);

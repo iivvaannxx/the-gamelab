@@ -7,6 +7,8 @@ import { Resources } from "@app/assets/resources";
 import { EventLoop } from "@app/scripts/event-loop";
 
 import * as Keyboard from "@gamelab/input-system/keyboard";
+import * as Mouse from "@gamelab/input-system/mouse";
+
 import type { GameScene } from "./scenes/game";
 
 /**
@@ -33,6 +35,7 @@ async function init() {
   // Initialize all the game modules.
   await Resources.init();
   Keyboard.init();
+  Mouse.init();
 
   Object.assign(Application, { instance: app });
   loader.classList.add("animate-out");
@@ -83,6 +86,7 @@ async function start(app: Application) {
 
   eventLoop.on("onUpdate", (delta) => {
     Keyboard.update();
+    Mouse.update();
 
     menuScene.onUpdate(delta);
     gameScene?.onUpdate(delta);
