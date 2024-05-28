@@ -44,30 +44,39 @@ export class Resources {
       spritesheet.textures.num9,
     ];
 
-    Resources.wingSound = Resources.getSound("/assets/sounds/wing.ogg", true);
-    Resources.pointSound = Resources.getSound("/assets/sounds/point.ogg", true);
-    Resources.fallSound = Resources.getSound("/assets/sounds/fall.ogg", true);
-    Resources.hitSound = Resources.getSound("/assets/sounds/hit.ogg", true);
-    Resources.swooshSound = Resources.getSound(
-      "/assets/sounds/swoosh.ogg",
-      true,
+    Resources.wingSound = Resources.getSound(["wing.ogg", "wing.aac"]);
+    Resources.fallSound = Resources.getSound(["fall.ogg", "fall.aac"]);
+    Resources.hitSound = Resources.getSound(["hit.ogg", "hit.aac"]);
+    Resources.swooshSound = Resources.getSound(["swoosh.ogg", "swoosh.aac"]);
+    Resources.pointSound = Resources.getSound(
+      ["point.ogg", "point.aac"],
+      (sound) => {
+        // Lower the volume of the point sound (it's a bit too high).
+        sound.volume = 0.5;
+      },
     );
   }
 
   /**
    * Loads a sound from the specified URL.
    *
-   * @param url - The URL of the sound file.
-   * @param preload - Indicates whether the sound should be preloaded.
+   * @param url The URL of the sound file.
+   * @param onLoad A callback that will be called when the sound is loaded.
    * @returns A `Sound` object representing the loaded sound.
    */
-  private static getSound(url: string, preload: boolean) {
+  private static getSound(sources: string[], onLoad?: (sound: Sound) => void) {
     return Sound.from({
-      url: url,
-      preload: preload,
+      url: sources.map((src) => `/assets/sounds/${src}`),
+      preload: true,
 
       autoPlay: false,
       loop: false,
+
+      loaded: (_err, sound) => {
+        if (sound) {
+          onLoad?.(sound);
+        }
+      },
     });
   }
 }
