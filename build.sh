@@ -1,13 +1,13 @@
 #!/bin/env bash
 
 root=$(pwd)
+pnpm install
 
 for dir in ./games/*; do 
   game=$(basename ${dir})
   echo "Building $game..."
 
   cd "$root/games/$game"
-  pnpm install
   pnpm run build
 
   distDir="$root/games/$game/dist"
