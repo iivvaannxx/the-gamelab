@@ -4,9 +4,12 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
+    "noEmit": true,
 
     "stripInternal": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true
-  }
+  },
+
+  "include": ["build.ts"]
 }

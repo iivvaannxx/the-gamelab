@@ -7,9 +7,6 @@
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./dist/types",
 
     "noUnusedLocals": true,
     "noUnusedParameters": true,
