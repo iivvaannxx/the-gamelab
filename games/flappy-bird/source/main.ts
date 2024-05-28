@@ -1,4 +1,4 @@
-import { Application } from "pixi.js";
+import { Application, Sprite } from "pixi.js";
 
 import "@app/styles/main.css";
 import "ldrs/bouncy";
@@ -11,6 +11,7 @@ import * as Mouse from "@gamelab/input-system/mouse";
 import * as Touch from "@gamelab/input-system/touch";
 
 import type { GameScene } from "./scenes/game";
+import { getResponsiveScale } from "./utils/screen";
 
 /**
  * Initializes the Flappy Bird game.
@@ -60,6 +61,9 @@ async function start(app: Application) {
   const { MenuScene } = await import("./scenes/menu");
   const { GameScene } = await import("./scenes/game");
 
+  const background = new Sprite(Resources.spritesheet.textures.background);
+  app.stage.addChild(background);
+
   const eventLoop = new EventLoop(app);
   const menuScene = new MenuScene();
   let gameScene: GameScene | null = null;
@@ -108,6 +112,11 @@ async function start(app: Application) {
   eventLoop.on("onResize", (width, height) => {
     menuScene.onResize(width, height);
     gameScene?.onResize(width, height);
+
+    const scale = getResponsiveScale(width, height);
+    background.scale.set(scale * 1.05);
+    background.x = width / 2;
+    background.y = height / 2;
   });
 }
 
