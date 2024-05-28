@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "lefthook install",
-    "build:all": "bun build.ts"
+    "build:all": "chmod +x ./build.sh && ./build.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.7.3",
