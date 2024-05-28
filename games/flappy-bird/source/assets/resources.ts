@@ -44,17 +44,14 @@ export class Resources {
       spritesheet.textures.num9,
     ];
 
-    Resources.wingSound = Resources.getSound(["wing.ogg", "wing.aac"]);
-    Resources.fallSound = Resources.getSound(["fall.ogg", "fall.aac"]);
-    Resources.hitSound = Resources.getSound(["hit.ogg", "hit.aac"]);
-    Resources.swooshSound = Resources.getSound(["swoosh.ogg", "swoosh.aac"]);
-    Resources.pointSound = Resources.getSound(
-      ["point.ogg", "point.aac"],
-      (sound) => {
-        // Lower the volume of the point sound (it's a bit too high).
-        sound.volume = 0.5;
-      },
-    );
+    Resources.wingSound = Resources.getSound(["wing.aac"]);
+    Resources.fallSound = Resources.getSound(["fall.aac"]);
+    Resources.hitSound = Resources.getSound(["hit.aac"]);
+    Resources.swooshSound = Resources.getSound(["swoosh.aac"]);
+    Resources.pointSound = Resources.getSound(["point.aac"], (sound) => {
+      // Lower the volume of the point sound (it's a bit too high).
+      sound.volume = 0.5;
+    });
   }
 
   /**
