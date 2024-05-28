@@ -1,6 +1,7 @@
+import { Application, TilingSprite } from "pixi.js";
+
 import { Resources } from "@app/assets/resources";
 import { getResponsiveScale } from "@app/utils/screen";
-import { Application, TilingSprite } from "pixi.js";
 
 /** Defines the logic for the ground entity.  */
 export class Ground extends TilingSprite {
