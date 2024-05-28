@@ -10,13 +10,13 @@ for (const game of gameFolderGlob.scanSync({ onlyFiles: false })) {
     echo "Building $game_name"
 
     cd ${game}
-    pnpm run build
+    bun run build
 
     # Copy the artifacts to the root dist folder.
     rm -rf ${root}/dist/$game_name
     mkdir -p ${root}/dist/$game_name
-    cp -r ${game}/dist/* ${root}/dist/$game_name/
-
+    cp -r ./dist/* ${root}/dist/$game_name/
+    
     # Go back to the root folder to build the next game
     cd ${root}
   `;
