@@ -31,6 +31,7 @@ async function init() {
     resizeTo: container,
     resolution: Math.min(3, window.devicePixelRatio),
     autoDensity: true,
+    preference: "webgpu",
 
     // We use a transparent background. The background is set from CSS.
     backgroundAlpha: 0,
