@@ -7,6 +7,7 @@ for dir in ./games/*; do
   echo "Building $game..."
 
   cd "$root/games/$game"
+  pnpm install
   pnpm run build
 
   distDir="$root/games/$game/dist"
