@@ -1,13 +1,26 @@
 #!/bin/env bash
 
 root=$(pwd)
-pnpm install
 
-for dir in ./games/*; do 
+# Build all the monorepo packages first.
+for dir in "./packages"/*; do
+  package=$(basename ${dir})
+  echo "Building $package..."
+
+  cd "$root/packages/$package"
+  pnpm install
+  pnpm run build
+done
+
+cd ${root}
+
+# Build all the games.
+for dir in "./games"/*; do
   game=$(basename ${dir})
   echo "Building $game..."
 
   cd "$root/games/$game"
+  pnpm install
   pnpm run build
 
   distDir="$root/games/$game/dist"
@@ -26,3 +39,4 @@ for dir in ./games/*; do
   cd ${root}
 done
 
+cp ./robots.txt ./dist/robots.txt
