@@ -16,8 +16,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@lib/*": ["./source/*"],
-    },
+      "@lib/*": ["./source/*"]
+    }
   },
 
   "include": ["source", "tsup.config.ts"],

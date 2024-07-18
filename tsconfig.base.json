@@ -9,5 +9,5 @@
     "stripInternal": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true
-  },
+  }
 }

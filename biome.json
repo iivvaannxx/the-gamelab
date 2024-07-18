@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "files": {
-    "ignore": [".git", "build", "dist", "node_modules"]
+    "ignore": [".git", "build", "dist", "node_modules", "*.astro"]
   },
   "formatter": {
     "enabled": true,
@@ -20,7 +20,7 @@
       "quoteProperties": "preserve",
       "quoteStyle": "double",
       "semicolons": "always",
-      "trailingComma": "all"
+      "trailingCommas": "all"
     },
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
