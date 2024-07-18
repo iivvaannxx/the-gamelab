@@ -21,7 +21,7 @@
 
       fhsEnv = pkgs.buildFHSUserEnv {
         
-        name = "flappy-bird";
+        name = "gamelab";
         targetPkgs = pkgs: [
 
           # The packages used within the project.
@@ -42,7 +42,7 @@
 
         buildInputs = [ fhsEnv ];
         shellHook = ''
-          exec ${fhsEnv}/bin/flappy-bird
+          exec ${fhsEnv}/bin/gamelab
         '';
       };
     };
