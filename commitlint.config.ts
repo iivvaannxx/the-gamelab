@@ -6,7 +6,15 @@ const config: UserConfig = {
     "scope-enum": [
       2,
       "always",
-      ["root", "games", "flappy-bird", "packages", "input-system"],
+      [
+        "root",
+        "apps",
+        "menu",
+        "games",
+        "flappy-bird",
+        "packages",
+        "input-system",
+      ],
     ],
   },
 };
