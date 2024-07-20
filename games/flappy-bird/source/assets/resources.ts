@@ -63,7 +63,9 @@ export class Resources {
    */
   private static getSound(sources: string[], onLoad?: (sound: Sound) => void) {
     return Sound.from({
-      url: sources.map((src) => `/assets/sounds/${src}`),
+      url: sources.map(
+        (src) => `${import.meta.env.BASE_URL}assets/sounds/${src}`,
+      ),
       preload: true,
 
       autoPlay: false,

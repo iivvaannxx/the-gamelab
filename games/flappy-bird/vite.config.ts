@@ -4,6 +4,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+  base: process.env.NODE_ENV === "production" ? "/flappy-bird/" : "/",
   plugins: [
     tsConfigPaths(),
     VitePWA({

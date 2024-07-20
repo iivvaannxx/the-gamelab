@@ -8,7 +8,7 @@ export const manifest: AssetsManifest = {
       assets: [
         {
           alias: "spritesheet",
-          src: "/assets/images/spritesheet.webp",
+          src: `${import.meta.env.BASE_URL}assets/images/spritesheet.webp`,
         },
       ],
     },
