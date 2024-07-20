@@ -22,7 +22,8 @@ export function addDotNavigation(
         const button = document.createElement("button");
         button.classList.add("embla__dot");
         button.type = "button";
-        button.name = `Go to slide ${i + 1}`;
+        button.name = "slide";
+        button.ariaLabel = `Go to slide ${i + 1}`;
 
         return button.outerHTML;
       })
