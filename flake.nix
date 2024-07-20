@@ -33,6 +33,7 @@
 
           # We need the packaged executable. The node-modules one doesn't work.
           pkgs.biome
+          pkgs.wrangler
         ];
       };
 
