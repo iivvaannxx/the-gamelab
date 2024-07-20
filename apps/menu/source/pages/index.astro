@@ -7,7 +7,9 @@ import { Icon } from "astro-icon/components";
 import { games } from "@app/data";
 import logo from "@assets/images/logo.png";
 import gamepad from "@assets/images/gamepad.png";
+
 import Footer from "@app/layouts/footer.astro";
+import SEO from "@app/layouts/seo.astro";
 
 import { Link } from "@app/components/base";
 import GameCarousel from "@components/carousel/game-carousel.astro";
@@ -20,8 +22,6 @@ const gameCount = games.filter((game) => !game.disabled).length;
   class="dark"
 >
   <head>
-    <meta charset="utf-8" />
-
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -48,6 +48,12 @@ const gameCount = games.filter((game) => !game.disabled).length;
       href="/safari-pinned-tab.svg"
       color="#5bbad5"
     />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
     <meta
       name="msapplication-TileColor"
       content="#ffffff"
@@ -56,17 +62,16 @@ const gameCount = games.filter((game) => !game.disabled).length;
       name="theme-color"
       content="#ffffff"
     />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="/favicon.svg"
-    />
     <meta
       name="viewport"
       content="width=device-width"
     />
-    <title>The Gamelab</title>
+    <SEO
+      title="The Gamelab"
+      description="🎮 A growing collection of open source games built with web technologies."
+    />
   </head>
+
   <body
     class="grid w-full grid-cols-1 gap-x-10 overflow-x-auto font-sans antialiased sm:overflow-x-clip md:grid-cols-[1fr,auto,1fr]"
   >
@@ -105,7 +110,7 @@ const gameCount = games.filter((game) => !game.disabled).length;
           <div class="flex flex-col">
             <h1 class="font-header text-4xl font-extrabold">The Gamelab</h1>
             <p
-              class="mt-6 max-w-prose text-pretty text-base font-medium text-foreground/80"
+              class="mt-5 max-w-prose text-pretty text-base font-medium text-foreground/80"
             >
               Hi there! This is a growing collection of <strong
                 >open source games</strong

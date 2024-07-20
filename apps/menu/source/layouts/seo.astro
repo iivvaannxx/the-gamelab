@@ -1,0 +1,52 @@
+---
+import type { ComponentProps } from "astro/types";
+import { SEO } from "astro-seo";
+
+type Props = Pick<
+  ComponentProps<typeof SEO>,
+  "title" | "description" | "noindex" | "nofollow"
+> & {
+  title: string;
+  description: string;
+};
+
+const { title, description, ...props } = Astro.props;
+
+// All the others that are not the current one.
+const makeProductionUrl = (pathname: string) =>
+  `${Astro.site?.origin}${pathname}`;
+const cleanTitle = title.trim();
+const cleanDescription = description.replace(/\s+/g, " ").trim();
+---
+
+<SEO
+  title={cleanTitle}
+  description={cleanDescription}
+  charset="utf-8"
+  canonical={Astro.site}
+  openGraph={{
+    basic: {
+      title: cleanTitle,
+      type: "website",
+      image: makeProductionUrl(`/og.png`),
+      url: Astro.site,
+    },
+    optional: {
+      description: cleanDescription,
+    },
+    image: {
+      width: 1200,
+      height: 630,
+      //alt: translations.meta.ogAlt,
+    },
+  }}
+  twitter={{
+    card: "summary_large_image",
+    creator: `@iivanportoo`,
+    title: cleanTitle,
+    image: makeProductionUrl(`/og.png`),
+    //imageAlt: translations.meta.ogAlt,
+    description: cleanDescription,
+  }}
+  {...props}
+/>

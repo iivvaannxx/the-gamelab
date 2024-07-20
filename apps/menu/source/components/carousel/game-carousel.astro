@@ -40,7 +40,7 @@ import GameCard from "./game-card.astro";
       [EmblaPluginClassNames()],
     );
 
-    const removeTweenScale = setupTweenScale(nodeEmblaApi, 0.1);
+    const removeTweenScale = setupTweenScale(nodeEmblaApi, 0.125);
     const removeDotNavigation = addDotNavigation(nodeEmblaApi, dotsWrapper);
     const removeArrowNavigationMobile = addArrowNavigation(
       nodeEmblaApi,
@@ -248,7 +248,7 @@ import GameCard from "./game-card.astro";
     }
 
     .embla__controls {
-      margin-top: 2rem;
+      margin-top: 1.8rem;
     }
   }
 </style>
