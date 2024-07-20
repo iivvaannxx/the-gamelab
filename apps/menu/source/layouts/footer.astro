@@ -1,0 +1,41 @@
+---
+import { Icon } from "astro-icon/components";
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@app/utils";
+
+type Props = HTMLAttributes<"footer">;
+const { class: clazz, ...props } = Astro.props;
+---
+
+<footer
+  class={cn(
+    "relative z-10 mx-auto border-t border-border py-6 font-header",
+    clazz,
+  )}
+  {...props}
+>
+  <p
+    class="w-full text-balance px-4 text-center text-sm"
+    data-footer-note
+  >
+    <span>Made with</span>
+    <Icon
+      class="mx-px mb-0.5 inline animate-beat"
+      name="heart"
+    />
+    <span>by Ivan Porto.</span>
+
+    <span
+      >Follow me on
+      <a
+        href="https://x.com/iivanportoo"
+        rel="noopener noreferrer"
+        target="_blank"
+        aria-label="Twitter"
+        class="font-bold text-accent underline underline-offset-1"
+        >Twitter</a
+      >.
+    </span>
+  </p>
+</footer>

@@ -1,0 +1,125 @@
+---
+import { Picture } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import type { HTMLAttributes } from "astro/types";
+
+import { Badge, Button, Link } from "@components/base";
+import type { GameData } from "@app/data";
+import { cn } from "@app/utils";
+
+type Props = HTMLAttributes<"article"> & GameData;
+const {
+  name,
+  description,
+  cover,
+  pathname,
+  repo,
+  madeWith,
+  disabled,
+
+  class: clazz,
+  ...props
+} = Astro.props;
+---
+
+<article
+  class={cn(
+    "bg-card text-card-foreground flex  flex-col overflow-clip rounded-xl border shadow-xl",
+    clazz,
+  )}
+  {...props}
+>
+  <header>
+    <a href={pathname}>
+      <Picture
+        src={cover}
+        alt={`Preview of game "${name}"`}
+        formats={["avif", "webp", "png"]}
+      />
+    </a>
+
+    <div class="mt-6 flex items-center justify-center px-6 xs:justify-between">
+      <h3
+        class="font-header text-2xl font-semibold leading-none tracking-tight lg:text-xl"
+      >
+        {name}
+      </h3>
+      <ul class="hidden gap-3 xs:flex">
+        {
+          madeWith.map((tool) => (
+            <li>
+              <Badge
+                hoverGlow
+                class="inline-flex aspect-square items-center gap-2 rounded-md p-2 text-xs font-medium md:aspect-auto md:px-3 md:py-1"
+              >
+                <Icon
+                  class="size-4"
+                  name={tool.toLowerCase().replaceAll(" ", "-")}
+                />
+                <span class="hidden lg:inline">{tool}</span>
+              </Badge>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </header>
+
+  <div class="mt-4 px-6">
+    <hr />
+    <p class="mt-4 text-pretty text-sm text-card-foreground/80">
+      {description}
+    </p>
+  </div>
+
+  <footer class="mt-auto flex flex-wrap items-center gap-4 px-6 py-8">
+    {
+      disabled ? (
+        <Button
+          class="grow gap-2 font-semibold"
+          name="Play Game"
+          disabled
+        >
+          <Icon
+            class="size-[1.5em]"
+            name="tabler:device-gamepad"
+          />
+          <span>Coming Soon</span>
+        </Button>
+      ) : (
+        <Link
+          data-play-link
+          label="Play Game"
+          href={pathname}
+          class="grow gap-2 font-semibold"
+          {disabled}
+        >
+          <Icon
+            class="size-[1.5em]"
+            name="tabler:device-gamepad"
+          />
+          <span>Play Game</span>
+        </Link>
+      )
+    }
+
+    {
+      !disabled && (
+        <Link
+          label="Source Code"
+          href={repo}
+          targetBlank
+          variant="outline"
+          class="grow gap-2 font-semibold"
+          {disabled}
+        >
+          <Icon
+            class="size-[1.5em]"
+            name="tabler:brand-github"
+          />
+          <span>Source Code</span>
+        </Link>
+      )
+    }
+  </footer>
+</article>

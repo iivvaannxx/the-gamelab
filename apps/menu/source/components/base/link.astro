@@ -1,0 +1,48 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { VariantProps } from "tailwind-variants";
+
+import { buttonVariants, cn } from "@app/utils";
+
+type Props = HTMLAttributes<"a"> & {
+  // We use button variants because our links have button-like styles.
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
+
+  label: string;
+  targetBlank?: boolean;
+  disabled?: boolean;
+};
+
+const {
+  label,
+  class: clazz,
+  href,
+
+  variant = "default",
+  size = "default",
+  targetBlank = false,
+  disabled = false,
+
+  ...props
+} = Astro.props;
+
+const ariaLabel = `Link to "${label}"${targetBlank ? ` (opens in a new tab)` : ""}`;
+const optionalAttrs = {
+  ...(targetBlank && { target: "_blank", rel: "noopener noreferrer" }),
+};
+---
+
+<a
+  {...props}
+  {...optionalAttrs}
+  href={disabled ? "#" : href}
+  aria-label={ariaLabel}
+  class={cn(
+    buttonVariants({ variant, size }),
+    { "opacity-50 pointer-events-none": disabled },
+    clazz,
+  )}
+>
+  <slot />
+</a>

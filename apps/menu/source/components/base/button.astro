@@ -1,0 +1,26 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { VariantProps } from "tailwind-variants";
+
+import { buttonVariants, cn } from "@app/utils";
+
+type Props = HTMLAttributes<"button"> & {
+  // We use button variants because our links have button-like styles.
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
+};
+
+const {
+  class: clazz,
+  variant = "default",
+  size = "default",
+  ...props
+} = Astro.props;
+---
+
+<button
+  {...props}
+  class={cn(buttonVariants({ variant, size }), clazz)}
+>
+  <slot />
+</button>

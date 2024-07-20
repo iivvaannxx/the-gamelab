@@ -1,0 +1,206 @@
+---
+import "@app/styles/index.css";
+
+import { Picture } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
+import { games } from "@app/data";
+import logo from "@assets/images/logo.png";
+import gamepad from "@assets/images/gamepad.png";
+import Footer from "@app/layouts/footer.astro";
+
+import { Link } from "@app/components/base";
+import GameCarousel from "@components/carousel/game-carousel.astro";
+
+const gameCount = games.filter((game) => !game.disabled).length;
+---
+
+<html
+  lang="en"
+  class="dark"
+>
+  <head>
+    <meta charset="utf-8" />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png"
+    />
+    <link
+      rel="manifest"
+      href="/site.webmanifest"
+    />
+    <link
+      rel="mask-icon"
+      href="/safari-pinned-tab.svg"
+      color="#5bbad5"
+    />
+    <meta
+      name="msapplication-TileColor"
+      content="#ffffff"
+    />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width"
+    />
+    <title>The Gamelab</title>
+  </head>
+  <body
+    class="grid w-full grid-cols-1 gap-x-10 overflow-x-auto font-sans antialiased sm:overflow-x-clip md:grid-cols-[1fr,auto,1fr]"
+  >
+    <div
+      class="fixed top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+    >
+    </div>
+
+    <aside
+      class="relative hidden h-full animate-fade-right animate-delay-300 @container md:block"
+    >
+      <Icon
+        width={128}
+        height={128}
+        name="typescript"
+        data-typescript-icon
+        class="absolute right-0 top-1/4 hidden -translate-x-1/2 animate-float @[16rem]:block @[22rem]:right-1/2 @[22rem]:-translate-x-0"
+      />
+
+      <Icon
+        width={128}
+        height={128}
+        name="pixijs"
+        data-pixijs-icon
+        class="absolute bottom-1/4 right-0 hidden -translate-x-1/2 animate-float animate-delay-500 @[16rem]:block @[22rem]:left-1/2"
+      />
+    </aside>
+
+    <div
+      class="mx-auto grid max-w-6xl animate-fade-down grid-rows-[1fr,auto,auto] px-4 py-6 animate-delay-150 sm:px-6"
+    >
+      <header class="mx-2 mt-12 md:mt-8 md:justify-center lg:mx-8">
+        <div
+          class="grid grid-cols-1 items-center lg:grid-cols-[1fr,auto] lg:gap-x-12"
+        >
+          <div class="flex flex-col">
+            <h1 class="font-header text-4xl font-extrabold">The Gamelab</h1>
+            <p
+              class="mt-6 max-w-prose text-pretty text-base font-medium text-foreground/80"
+            >
+              Hi there! This is a growing collection of <strong
+                >open source games</strong
+              > built with web technologies. As of this moment {
+                gameCount === 1
+                  ? "there's only one game"
+                  : `there are ${gameCount} games`
+              } available to play. I will be adding more games in the future, so
+              stay tuned! In the meantime, you can:
+            </p>
+          </div>
+
+          <div
+            class="mr-8 mt-16 hidden size-32 overflow-clip rounded-full bg-[#e2e0e1] lg:block"
+          >
+            <Picture
+              src={logo}
+              formats={["avif", "webp", "png"]}
+              alt="Logo"
+              class="relative bottom-1 left-0.5"
+            />
+          </div>
+        </div>
+
+        <div>
+          <Link
+            href="https://github.com/iivvaannxx/the-gamelab"
+            targetBlank
+            label="Star on GitHub"
+            class="mt-8 inline-flex items-center gap-2 lg:mt-4"
+          >
+            <Icon
+              name="tabler:star"
+              class="mx-1 size-[1.2em]"
+            />
+            <span>Star on GitHub</span>
+          </Link>
+        </div>
+      </header>
+
+      <main class="lg:my-18 mx-2 mb-8 mt-16 lg:mx-8">
+        <h2 class="mb-4 inline-flex items-center text-xl font-semibold">
+          <span>
+            <Picture
+              src={gamepad}
+              formats={["avif", "webp", "png"]}
+              alt="Gamepad"
+              class="mb-1.5 mr-1 inline size-[1.2em]"
+            />
+          </span>
+          <span>&nbsp;Games</span>
+        </h2>
+        <hr />
+        <GameCarousel />
+      </main>
+
+      <Footer class="mt-12 w-full self-end p-0 pb-1 pt-4" />
+    </div>
+
+    <aside
+      class="relative hidden h-full animate-fade-left animate-delay-300 @container md:block"
+    >
+      <Icon
+        width={128}
+        height={128}
+        name="threejs"
+        data-threejs-icon
+        class="absolute left-0 top-1/4 hidden translate-x-1/2 animate-float @[16rem]:block @[22rem]:left-1/2 @[22rem]:translate-x-0"
+      />
+
+      <Icon
+        width={128}
+        height={128}
+        name="react"
+        data-react-icon
+        class="absolute bottom-1/4 left-0 hidden translate-x-1/2 animate-float animate-delay-500 @[16rem]:block @[22rem]:left-auto @[22rem]:right-1/2"
+      />
+    </aside>
+  </body>
+</html>
+
+<style>
+  [data-threejs-icon] {
+    filter: drop-shadow(0px 0px 32px #ffffff);
+  }
+
+  [data-react-icon] {
+    filter: drop-shadow(0px 0px 32px #00d8ff);
+  }
+
+  [data-typescript-icon] {
+    filter: drop-shadow(0px 0px 32px #3178c6);
+  }
+
+  [data-pixijs-icon] {
+    filter: drop-shadow(0px 0px 32px #e7226499);
+  }
+</style>

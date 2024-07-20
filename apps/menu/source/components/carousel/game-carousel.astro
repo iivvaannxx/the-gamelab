@@ -1,0 +1,254 @@
+---
+import { Icon } from "astro-icon/components";
+
+import { games } from "@app/data";
+import { Button } from "@components/base";
+
+import GameCard from "./game-card.astro";
+---
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+  import EmblaPluginClassNames from "embla-carousel-class-names";
+
+  import {
+    addDotNavigation,
+    setupTweenScale,
+    addArrowNavigation,
+  } from "@components/carousel/utils";
+
+  const emblaNodes = document.querySelectorAll("div[data-game-carousel]");
+  emblaNodes.forEach((node) => {
+    const embla = node.querySelector("div.embla")!;
+    const dotsWrapper = node.querySelector("div.embla__dots")!;
+
+    const prevButton = node.querySelector("button[data-prev-button]")!;
+    const nextButton = node.querySelector("button[data-next-button]")!;
+    const prevButtonMobile = node.querySelector(
+      "button[data-prev-button-mobile]",
+    )!;
+    const nextButtonMobile = node.querySelector(
+      "button[data-next-button-mobile]",
+    )!;
+
+    const nodeEmblaApi = EmblaCarousel(
+      embla,
+      {
+        container: embla.querySelector("div.embla__container")!,
+        loop: true,
+      },
+      [EmblaPluginClassNames()],
+    );
+
+    const removeTweenScale = setupTweenScale(nodeEmblaApi, 0.1);
+    const removeDotNavigation = addDotNavigation(nodeEmblaApi, dotsWrapper);
+    const removeArrowNavigationMobile = addArrowNavigation(
+      nodeEmblaApi,
+      prevButtonMobile,
+      nextButtonMobile,
+    );
+
+    const removeArrowNavigation = addArrowNavigation(
+      nodeEmblaApi,
+      prevButton,
+      nextButton,
+    );
+
+    nodeEmblaApi
+      .on("destroy", removeTweenScale)
+      .on("destroy", removeDotNavigation)
+      .on("destroy", removeArrowNavigation)
+      .on("destroy", removeArrowNavigationMobile);
+  });
+</script>
+
+<div data-game-carousel>
+  <div class="embla">
+    <div class="embla__viewport py-6 md:py-8 lg:py-12">
+      <div class="embla__container">
+        {
+          games.map((data) => (
+            <div class="embla__slide embla__class-names">
+              <GameCard
+                class="max-w-xl lg:select-none"
+                {...data}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="embla__controls hidden flex-wrap gap-y-8 lg:block">
+    <div class="flex gap-4 lg:hidden">
+      <Button
+        data-prev-button-mobile
+        variant="outline"
+        size="icon"
+        class="box-content size-9 rounded-full lg:size-12 lg:p-0.5"
+      >
+        <Icon
+          class="size-[1.1em] lg:size-[1.5em]"
+          name="tabler:arrow-left"
+        />
+        <span class="sr-only"> Previous </span>
+      </Button>
+      <Button
+        data-next-button-mobile
+        variant="outline"
+        size="icon"
+        class="box-content size-9 rounded-full lg:size-12 lg:p-0.5"
+      >
+        <Icon
+          class="size-[1.1em] lg:size-[1.5em]"
+          name="tabler:arrow-right"
+        />
+        <span class="sr-only"> Next </span>
+      </Button>
+    </div>
+
+    <Button
+      data-prev-button
+      variant="outline"
+      size="icon"
+      class="box-content hidden size-9 rounded-full lg:inline-flex lg:size-12 lg:p-0.5"
+    >
+      <Icon
+        class="size-[1.1em] lg:size-[1.5em]"
+        name="tabler:arrow-left"
+      />
+      <span class="sr-only"> Previous </span>
+    </Button>
+    <div class="embla__dots"></div>
+    <Button
+      data-next-button
+      variant="outline"
+      size="icon"
+      class="box-content hidden size-9 rounded-full lg:inline-flex lg:size-12 lg:p-0.5"
+    >
+      <Icon
+        class="size-[1.1em] lg:size-[1.5em]"
+        name="tabler:arrow-right"
+      />
+      <span class="sr-only"> Next </span>
+    </Button>
+  </div>
+</div>
+
+<style>
+  .embla__viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%
+    );
+  }
+
+  .embla__container {
+    display: grid;
+
+    grid-auto-flow: column;
+    grid-auto-columns: 90%;
+
+    backface-visibility: hidden;
+    touch-action: pan-y pinch-zoom;
+    margin-left: calc(var(--slide-spacing, 1rem) * -1);
+  }
+
+  .embla__slide {
+    min-width: 0;
+    transition: opacity 0.2s ease-in-out;
+
+    padding-left: var(--slide-spacing, 1rem);
+  }
+
+  .embla__slide:not(.is-snapped) {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .embla__controls {
+    display: flex;
+    justify-content: space-between;
+
+    padding-inline: 1rem;
+    margin-top: 1rem;
+  }
+
+  .embla__dots {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+    align-items: center;
+  }
+
+  :global(.embla__dot) {
+    appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    border: 0;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    width: 1.5rem;
+
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  :global(.embla__dot:after) {
+    box-shadow: inset 0 0 0 0.2rem theme("colors.muted.foreground / 0.25");
+    border-radius: 50%;
+
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+
+    align-items: center;
+    content: "";
+  }
+
+  :global(.embla__dot--selected:after) {
+    box-shadow: inset 0 0 0 0.2rem theme("colors.accent.DEFAULT");
+  }
+
+  @media screen(md) {
+    .embla__container {
+      grid-auto-columns: 70%;
+    }
+
+    :global(.embla__dot) {
+      width: 2rem;
+    }
+
+    :global(.embla__dot:after) {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .embla__controls {
+      margin-top: 1.5rem;
+    }
+  }
+
+  @media screen(lg) {
+    .embla__container {
+      grid-auto-columns: 50%;
+    }
+
+    .embla__controls {
+      margin-top: 2rem;
+    }
+  }
+</style>

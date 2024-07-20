@@ -1,0 +1,32 @@
+---
+import { cn } from "@app/utils";
+import type { HTMLAttributes } from "astro/types";
+
+export type Props = HTMLAttributes<"span"> & {
+  hoverGlow?: boolean;
+};
+const { class: clazz, hoverGlow = false, ...props } = Astro.props;
+---
+
+<span
+  class={cn(
+    "group/badge inline-flex items-center justify-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-card-foreground",
+    {
+      "relative": hoverGlow,
+      "overflow-hidden": hoverGlow,
+      "select-none": hoverGlow,
+    },
+    clazz,
+  )}
+  {...props}
+>
+  <slot />
+
+  {
+    hoverGlow && (
+      <div class="absolute inset-0 flex size-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover/badge:duration-1000 group-hover/badge:[transform:skew(-12deg)_translateX(150%)]">
+        <div class="bg-foreground/15 relative h-full w-8" />
+      </div>
+    )
+  }
+</span>
