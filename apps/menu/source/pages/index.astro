@@ -129,6 +129,7 @@ const gameCount = games.filter((game) => !game.disabled).length;
             <Picture
               src={logo}
               formats={["avif", "webp", "png"]}
+              loading="eager"
               alt="Logo"
               class="relative bottom-1 left-0.5"
             />
