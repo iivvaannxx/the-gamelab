@@ -19,14 +19,17 @@ export default defineConfig({
         background_color: "#121212",
         display: "standalone",
 
+        start_url: "/flappy-bird/",
+        scope: "/flappy-bird/",
+
         icons: [
           {
-            src: "/android-chrome-192x192.png",
+            src: "/flappy-bird/android-chrome-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/android-chrome-256x256.png",
+            src: "/flappy-bird/android-chrome-256x256.png",
             sizes: "256x256",
             type: "image/png",
           },
